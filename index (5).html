@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Кванттық теория бойынша әрбір ілгерілемелі еркіндік дәрежесіне қандай энергия сәйкес келеді?</title>
+<style>
+:root{--bg:#1b1b1b;--chalk:#f2f2ee;--dim:#a9a9a4;--or:#f2a71b;--bl:#2b86b0;--gr:#8f8f8c;--line:rgba(255,255,255,.78)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#0e0e0e;overflow:hidden;font-family:"Segoe UI","Trebuchet MS",Verdana,Arial,sans-serif;color:var(--chalk);-webkit-tap-highlight-color:transparent;user-select:none}
+#view{position:fixed;left:0;top:0;right:0;overflow:hidden}
+#stage{position:absolute;width:1280px;height:720px;transform-origin:0 0;background:var(--bg);box-shadow:0 0 40px rgba(0,0,0,.7);overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .35s ease;overflow:hidden;
+ background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.075),transparent 60%),radial-gradient(ellipse at 85% 92%,rgba(255,255,255,.05),transparent 55%),linear-gradient(160deg,#242424,#161616)}
+.slide::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;mix-blend-mode:screen;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .22 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.slide.active{opacity:1;visibility:visible;z-index:2}
+.slide>*{position:relative}
+.note{display:none}
+/* header */
+.hd{position:absolute!important;left:60px;top:26px;right:120px}
+.h1{color:var(--or);font-weight:800;font-size:22px;letter-spacing:.3px}
+.h2{color:var(--chalk);font-weight:800;font-size:33px;line-height:1.15;margin-top:4px}
+.h3{color:var(--dim);font-size:16px;margin-top:6px}
+.pg{position:absolute!important;right:44px;top:24px;color:var(--dim);font-size:15px;font-weight:700;letter-spacing:1px}
+.body{position:absolute!important;left:60px;right:60px;top:150px;bottom:34px}
+.body.cc{display:flex;flex-direction:column;justify-content:center}
+.foot{position:absolute!important;left:60px;right:60px;bottom:10px;height:3px;background:var(--or);opacity:.9}
+/* chalk widgets */
+.card{border:2px solid var(--line);border-radius:14px;padding:16px 20px;background:rgba(255,255,255,.035)}
+.card.or{border-color:var(--or)}
+.card.bl{border-color:#4ea9d3}
+.tag{display:inline-block;background:#f3f3ef;color:#1e1e1e;font-weight:800;font-size:15px;padding:4px 14px;border-radius:3px;box-shadow:2px 2px 0 rgba(0,0,0,.5)}
+.tag.or{background:var(--or)}
+.tag.bl{background:var(--bl);color:#fff}
+.ttl{font-weight:800;font-size:21px;color:var(--chalk);line-height:1.2}
+.ttl.or{color:var(--or)}
+.txt{font-size:18px;line-height:1.4;color:#dcdcd6}
+.dim{color:var(--dim)}
+.or-t{color:var(--or)}
+.bl-t{color:#5ab6e0}
+.row{display:flex;gap:22px}
+.col{display:flex;flex-direction:column;gap:16px}
+ul.k{list-style:none}
+ul.k li{position:relative;padding-left:26px;font-size:18px;line-height:1.4;color:#e4e4de;margin:7px 0}
+ul.k li::before{content:"";position:absolute;left:2px;top:.55em;width:11px;height:11px;border:2px solid var(--or);border-radius:50%}
+.ring{background:#1f1f1f;width:70px;height:70px;border-radius:50%;border:4px solid var(--or);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;flex:none;box-shadow:0 0 0 3px rgba(242,167,27,.18)}
+/* formulas */
+.fm{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;line-height:1.35;white-space:nowrap}
+.fm.s{font-size:24px}.fm.xs{font-size:21px}
+.fm i{font-style:italic}
+.fm sub,.fm sup,.txt sub,.txt sup{font-size:.62em;line-height:0}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.12;margin:0 .12em}
+.fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .18em}
+.fr>span:last-child{padding:0 .18em}
+.sq{display:inline-flex;align-items:stretch;vertical-align:middle}
+.sq .rad{width:.75em;height:auto;align-self:stretch;stroke:currentColor;fill:none;stroke-width:1.5;overflow:visible}
+.sq .ov{border-top:1.5px solid currentColor;padding:0 .14em}
+.fbox{border:2px dashed rgba(255,255,255,.55);border-radius:10px;padding:8px 18px;background:rgba(0,0,0,.18);display:inline-block}
+.fbox.or{border-color:var(--or);border-style:solid}
+/* tables */
+table.tb{border-collapse:separate;border-spacing:0 6px;width:100%}
+table.tb th{background:var(--or);color:#1c1c1c;font-weight:800;font-size:17px;padding:8px 14px;text-align:left}
+table.tb th:first-child{border-radius:4px 0 0 4px}table.tb th:last-child{border-radius:0 4px 4px 0}
+table.tb td{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.28);border-bottom:1px solid rgba(255,255,255,.28);padding:8px 14px;font-size:17px;line-height:1.3;color:#e8e8e2}
+table.tb td:first-child{border-left:1px solid rgba(255,255,255,.28);border-radius:4px 0 0 4px;font-weight:700}
+table.tb td:last-child{border-right:1px solid rgba(255,255,255,.28);border-radius:0 4px 4px 0}
+td.hl{background:var(--or)!important;color:#1b1b1b!important;font-weight:800;text-align:center}
+/* title slide */
+.tf,.tf *{font-family:"Cambria","Georgia","Times New Roman","Liberation Serif",serif}
+.t-out{color:transparent;-webkit-text-stroke:2px #e6e6e2;font-weight:900;letter-spacing:1px}
+.t-or{color:transparent;-webkit-text-stroke:2px var(--or);font-weight:900;letter-spacing:1px}
+svg text{font-family:"Segoe UI","Trebuchet MS",Verdana,Arial,sans-serif}
+svg .ax text{fill:#d8d8d2;font-size:14px}
+.ctl{display:flex;align-items:center;gap:10px;margin:3px 0}
+.ctl>span{width:46px;font-size:17px;color:var(--chalk);flex:none}
+.ctl>b{min-width:72px;text-align:right;color:var(--or);font-size:16px}
+input[type=range]{flex:1;accent-color:#f2a71b;height:6px;cursor:pointer;min-width:60px}
+.mb{background:transparent;color:#eee;border:2px solid rgba(255,255,255,.6);border-radius:8px;padding:6px 12px;font-size:16px;cursor:pointer;font-family:inherit}
+.mb.on{background:var(--or);color:#1b1b1b;border-color:var(--or);font-weight:800}
+.pbtn{background:#1d1d1d;color:#eee;border:2px solid var(--or);border-radius:8px;width:40px;height:32px;font-size:15px;cursor:pointer}
+/* controls */
+#ctrl{position:fixed;left:0;right:0;bottom:0;height:48px;background:#0b0b0b;border-top:1px solid #333;display:flex;align-items:center;justify-content:center;gap:10px;z-index:20;color:#bbb;font-size:14px}
+#ctrl button{background:#1d1d1d;color:#eee;border:1.5px solid #666;border-radius:7px;height:32px;min-width:38px;padding:0 12px;font-size:15px;cursor:pointer;font-family:inherit}
+#ctrl button:hover{border-color:var(--or);color:var(--or)}
+#cnt{min-width:70px;text-align:center;font-weight:700;color:var(--chalk)}
+#prog{position:fixed;left:0;top:0;height:4px;background:var(--or);width:0;z-index:30;transition:width .3s}
+#notes{position:fixed;left:0;right:0;bottom:48px;height:150px;background:#111;border-top:2px solid var(--or);padding:12px 24px;overflow:auto;font-size:16px;line-height:1.5;color:#e6e6e0;z-index:19;display:none;user-select:text}
+#notes b{color:var(--or)}
+@media(max-width:700px){#ctrl{gap:6px}#ctrl button{padding:0 8px;min-width:34px}#ctrl .hide-s{display:none}#notes{height:120px;font-size:14px}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="mol" viewBox="0 0 120 100">
+   <g fill="none" stroke="#ddd" stroke-width="1.6" stroke-linecap="round" opacity=".75">
+    <circle cx="22" cy="62" r="9"/><circle cx="52" cy="38" r="9"/><circle cx="86" cy="52" r="9"/><circle cx="64" cy="82" r="8"/><circle cx="100" cy="22" r="7"/>
+    <path d="M29 56L45 43M60 40L78 49M58 77L66 74M70 76L80 59M90 45L96 29"/>
+   </g>
+  </symbol>
+  <symbol id="rack" viewBox="0 0 250 230">
+   <g fill="none" stroke="#f1f1ed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 128H225M30 128V205M225 128V205M30 205H225"/>
+    <rect x="52" y="30" width="24" height="106" rx="12"/>
+    <rect x="54" y="78" width="20" height="56" rx="10" fill="#2b86b0" stroke="none"/>
+    <rect x="92" y="30" width="24" height="106" rx="12"/>
+    <rect x="94" y="62" width="20" height="72" rx="10" fill="#f2a71b" stroke="none"/>
+    <rect x="132" y="30" width="24" height="106" rx="12"/>
+    <path d="M168 40L206 120"/><path d="M188 34L222 112"/><path d="M168 40Q176 30 188 34"/><path d="M206 120Q216 124 222 112"/>
+    <path d="M62 150l8 8M100 150l8 8M140 150l8 8" opacity=".5"/>
+   </g>
+  </symbol>
+  <marker id="arO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f2a71b"/></marker>
+  <marker id="arB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4ea9d3"/></marker>
+  <marker id="arW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e8e8e2"/></marker>
+  <marker id="arG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a9a9a4"/></marker>
+ </defs>
+</svg>
+
+<div id="view"><div id="stage">
+
+<!-- 1 ТИТУЛ -->
+<section class="slide" data-n="1">
+ <svg style="position:absolute;left:34px;top:30px;width:150px;height:125px;opacity:.9" viewBox="0 0 120 100"><use href="#mol"/></svg>
+ <svg style="position:absolute;left:760px;top:20px;width:520px;height:120px;opacity:.55" viewBox="0 0 520 120" fill="none" stroke="#ddd" stroke-width="1.6" stroke-dasharray="6 6" stroke-linecap="round"><path d="M20 90C120 10 260 120 360 50S480 10 505 70"/></svg>
+ <div style="position:absolute;left:120px;top:210px;width:2px;height:150px;background:#e6e6e2;opacity:.85"></div>
+ <div style="position:absolute;left:100px;top:198px;width:700px;height:2px;background:#e6e6e2;opacity:.85"></div>
+ <div style="position:absolute;left:112px;top:192px;width:14px;height:14px;border-radius:50%;background:#e6e6e2"></div>
+ <div class="tf" style="position:absolute;left:150px;top:200px;width:770px">
+  <div style="font-size:42px;line-height:1.2;font-weight:700;color:#f2f2ee">Кванттық теория бойынша әрбір ілгерілемелі</div>
+  <div style="font-size:42px;line-height:1.2;font-weight:700;color:var(--or);margin-top:2px">еркіндік дәрежесіне қандай энергия сәйкес келеді?</div>
+  <div style="width:130px;height:4px;background:var(--bl);margin:24px 0 20px;border-radius:2px"></div>
+  <span class="tag or" style="font-size:20px;padding:5px 18px">Топтық жоба · 3 бөлім</span>
+  <div style="font-size:21px;color:#e4e4de;margin-top:26px;line-height:1.75">
+   <span style="color:var(--or)">Орындаған:</span> <b style="color:#f2f2ee">Кәдірова Аяулым, Тұрсынбай Балнұр, Жуматаев Дархан</b><br>
+   <span style="color:var(--or)">Күні:</span> <b style="color:#f2f2ee">12.11.2026</b>
+  </div>
+ </div>
+ <svg style="position:absolute;left:880px;top:300px;width:340px;height:310px" viewBox="0 0 250 230"><use href="#rack"/>
+  <g fill="none" stroke="#fff" stroke-width="1.5"><circle cx="64" cy="128" r="3"><animate attributeName="cy" values="128;86" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="68" cy="128" opacity="0" r="2.2"><animate attributeName="cy" values="128;86" dur="2.2s" begin="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.2s" begin="1.1s" repeatCount="indefinite"/></circle><circle cx="104" cy="128" r="3"><animate attributeName="cy" values="128;68" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="108" cy="128" opacity="0" r="2.2"><animate attributeName="cy" values="128;68" dur="2.6s" begin="1.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/></circle></g></svg>
+ <svg style="position:absolute;left:1070px;top:520px;width:150px;height:125px;opacity:.7" viewBox="0 0 120 100"><use href="#mol"/></svg>
+ <div style="position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--or)"></div>
+ <div class="note"><b>Кіріспе.</b> Біздің жобаның сұрағы: кванттық теория бойынша әрбір ілгерілемелі еркіндік дәрежесіне қандай орташа энергия сәйкес келеді? Жоба үш бөлімнен тұрады: кванттық теория мен еркіндік дәрежесі, энергияның тең бөліну теоремасы, есептеу мен қолданылуы. Орындаған: Кәдірова Аяулым, Тұрсынбай Балнұр, Жуматаев Дархан. Күні: 12.11.2026.</div>
+</section>
+
+<!-- 2 СҰРАҚ ЖӘНЕ ЖОСПАР -->
+<section class="slide" data-n="2">
+ <div class="hd"><div class="h1">Сұрақ және жоспар</div><div class="h2">Әр ілгерілемелі дәрежеге қанша энергия келеді?</div></div>
+ <div class="pg">02</div>
+ <div class="body">
+  <div style="position:absolute;left:150px;right:150px;top:60px;border-top:2px dashed rgba(255,255,255,.4)"></div>
+  <div class="row" style="gap:30px;margin-top:20px">
+   <div class="col" style="flex:1;align-items:flex-start;gap:14px">
+    <div class="ring">01</div>
+    <div class="ttl" style="margin-top:6px">Кванттық теория және еркіндік дәрежесі</div>
+    <div class="txt dim">Планк кванты, еркіндік дәрежесі, ілгерілемелі қозғалыс, классика мен кванттың айырмашылығы</div>
+    <span class="tag">слайд 3–6</span>
+   </div>
+   <div class="col" style="flex:1;align-items:flex-start;gap:14px">
+    <div class="ring">02</div>
+    <div class="ttl" style="margin-top:6px">Энергияның тең бөліну теоремасы</div>
+    <div class="txt dim">Кіріспе, квадраттық дәреже, тұжырымы, Максвелл және Гаусс арқылы қорытылуы, жалпы дәлел, қозғалыс түрлері, бір және екі атомды газ</div>
+    <span class="tag">слайд 7–12</span>
+   </div>
+   <div class="col" style="flex:1;align-items:flex-start;gap:14px">
+    <div class="ring">03</div>
+    <div class="ttl" style="margin-top:6px">Есеп, температура, шарттар, қолданылуы</div>
+    <div class="txt dim">Гелий есебі, температураның әсері, кванттық шарттар, C<sub>V</sub> сатылары, практикалық қолдану</div>
+    <span class="tag">слайд 13–17</span>
+   </div>
+  </div>
+  <div class="card or" style="position:absolute;left:0;right:0;bottom:30px;text-align:center;font-size:22px;color:var(--chalk)">Жауабын біртіндеп табамыз: алдымен ұғымдар, сонан соң теорема, соңында есеп пен шарттар</div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Жоспар.</b> Әдейі жауапты алдын ала айтпаймыз. Бірінші бөлімде кванттық теорияның қалыптасуын, еркіндік дәрежесі ұғымын және ілгерілемелі қозғалысты қарастырамыз. Екінші бөлімде тең бөліну теоремасы мен оның Максвелл таралуы және статистикалық интеграл арқылы қорытылуы көрсетіледі. Үшінші бөлімде гелий есебі, температураның әсері, қолдану шарттары және практикалық қолданыс беріледі.</div>
+</section>
+
+<!-- 3 КВАНТТЫҚ ТЕОРИЯНЫҢ ҚАЛЫПТАСУЫ -->
+<section class="slide" data-n="3">
+ <div class="hd"><div class="h1">1-бөлім · Кванттық теория</div><div class="h2">Кванттық теорияның қалыптасуы</div></div>
+ <div class="pg">03</div>
+ <div class="body">
+  <div class="row" style="gap:24px;height:262px">
+   <div class="card" style="width:380px;padding:8px 12px"><div id="ch-bb"></div><div class="ctl"><span><i>T</i></span><input type="range" id="sT0" min="3000" max="6000" step="250" value="5000"><b id="vT0">5000 К</b></div></div>
+   <div class="col" style="flex:1;gap:12px">
+    <div class="card">
+     <div class="ttl or">Ультракүлгін апат</div>
+     <div class="txt" style="margin-top:6px">Классикалық теория бойынша қара дене сәулесінің энергиясы қысқа толқын ұзындығында шексіздікке ұмтылуы керек еді</div>
+    </div>
+    <div class="card or" style="display:flex;align-items:center;gap:22px">
+     <div><div class="ttl">Планк, 1900 ж.</div><div class="txt dim" style="margin-top:4px">Энергия кванттармен шығарылады</div></div>
+     <div class="fbox or"><span class="fm">E = h·ν</span></div>
+     <div class="txt dim" style="font-size:16px">h = 6,626·10<sup>−34</sup> Дж·с</div>
+    </div>
+   </div>
+  </div>
+  <div style="margin-top:14px;position:relative;height:220px">
+   <div style="position:absolute;left:30px;right:30px;top:42px;border-top:2px dashed rgba(255,255,255,.55)"></div>
+   <div id="tl" style="display:flex;justify-content:space-between;position:relative"></div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Қалыптасуы.</b> XIX ғасырдың соңында физиканың барлық құбылысын классикалық механика мен электродинамика түсіндіреді деп есептелді. Алайда абсолют қара дененің сәулеленуін түсіндіру мүмкін болмады: теория бойынша қысқа толқын ұзындығында энергия шексіздікке ұмтылуы керек еді, бұл «ультракүлгін апат» деп аталды. 1900 жылы Планк энергия үздіксіз емес, E = hν түріндегі үлестермен шығарылады деп ұсынды, мұнда h = 6,626·10⁻³⁴ Дж·с. Жиілікті ν = c/λ арқылы жазсақ, E = hc/λ. Кейінгі кезеңдер: 1905 Эйнштейн фотондар, 1913 Бор моделі, 1924 де Бройль толқыны λ = h/p, 1925–1926 Гейзенберг пен Шредингер кванттық механиканың негізін қалады. Модельде T жүгірткісін жылжытсаңыз, Планк қисығы өзгереді, ал классикалық қисық қысқа толқында шексіздікке ұмтыла береді (көк аймақ – ультракүлгін).</div>
+</section>
+
+<!-- 4 ЕРКІНДІК ДӘРЕЖЕСІ -->
+<section class="slide" data-n="4">
+ <div class="hd"><div class="h1">1-бөлім · Кванттық теория</div><div class="h2">Еркіндік дәрежесі</div></div>
+ <div class="pg">04</div>
+ <div class="body cc">
+  <div class="row" style="gap:24px">
+   <div class="card" style="flex:1.2">
+    <div class="ttl or">Еркіндік дәрежесі, i</div>
+    <div class="txt" style="margin-top:6px">Жүйенің кеңістіктегі орнын толық анықтайтын тәуелсіз координаталар саны</div>
+   </div>
+   <div class="card or" style="flex:1;text-align:center">
+    <div class="fm" style="font-size:38px"><i>i</i> = 3<i>N</i> − <i>k</i></div>
+    <div class="txt dim" style="font-size:15px;margin-top:2px"><i>N</i> – атомдар саны, <i>k</i> – байланыс саны</div>
+   </div>
+  </div>
+  <table class="tb" style="margin-top:14px">
+   <tr><th style="width:36%">Молекула түрі</th><th style="width:22%">Мысал</th><th>Еркіндік дәрежесі</th></tr>
+   <tr><td>Бір атомды</td><td>He, Ne, Ar</td><td><span class="tag or">i = 3</span>&nbsp; ілгерілемелі</td></tr>
+   <tr><td>Екі атомды</td><td>N₂, O₂, H₂</td><td><span class="tag or">i = 5</span>&nbsp; 3 ілгерілемелі + 2 айналмалы</td></tr>
+   <tr><td>Көп атомды (сызықты емес)</td><td>H₂O, CH₄</td><td><span class="tag or">i = 6</span>&nbsp; 3 ілгерілемелі + 3 айналмалы</td></tr>
+  </table>
+  <div class="txt dim" style="margin-top:8px;font-size:16px">Жоғары температурада екі және көп атомды молекулаларға тербелмелі дәрежелер де қосылады.</div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Еркіндік дәрежесі</b> – механикалық жүйенің кеңістіктегі орнын толық анықтау үшін қажетті тәуелсіз координаталар саны. Қозғалыс ілгерілемелі, айналмалы және тербелмелі болуы мүмкін, әрқайсысының өз дәрежелері бар. i = 3N − k формуласында N – бөлшек (атом) саны, k – олардың арасындағы байланыс саны. Бір атомды газдарда (He, Ne, Ar) i = 3; екі атомды (N₂, O₂, H₂) қалыпты температурада i = 5, яғни 3 ілгерілемелі және 2 айналмалы; сызықты емес көп атомды (H₂O, CH₄) i = 6. Жоғары температурада тербелмелі дәрежелер қосылады.</div>
+</section>
+
+<!-- 5 ІЛГЕРІЛЕМЕЛІ ҚОЗҒАЛЫС -->
+<section class="slide" data-n="5">
+ <div class="hd"><div class="h1">1-бөлім · Кванттық теория</div><div class="h2">Ілгерілемелі қозғалыс: үш координата, үш қосылғыш</div></div>
+ <div class="pg">05</div>
+ <div class="body cc">
+  <div class="row" style="gap:26px">
+   <div class="card" style="width:520px;padding:8px 12px"><div id="ch-vec"></div>
+    <div class="ctl"><span class="bl-t"><i>v<sub>x</sub></i></span><input type="range" id="sVx" min="0.15" max="1" step="0.05" value="0.9"></div>
+    <div class="ctl"><span><i>v<sub>y</sub></i></span><input type="range" id="sVy" min="0.15" max="1" step="0.05" value="0.65"></div>
+    <div class="ctl"><span style="color:#c9c9c3"><i>v<sub>z</sub></i></span><input type="range" id="sVz" min="0.15" max="1" step="0.05" value="0.7"></div></div>
+   <div class="col" style="flex:1;gap:14px">
+    <ul class="k" style="margin:0">
+     <li>Орны – <i>x, y, z</i>; жылдамдығы – <i>v<sub>x</sub>, v<sub>y</sub>, v<sub>z</sub></i>: <b class="or-t">3 еркіндік дәрежесі</b></li>
+     <li>Жылдамдық квадраты құраушылар квадратының қосындысы</li>
+    </ul>
+    <div class="fbox" style="align-self:flex-start"><span class="fm s"><i>v</i>² = <i>v<sub>x</sub></i>² + <i>v<sub>y</sub></i>² + <i>v<sub>z</sub></i>²</span></div>
+    <div class="txt">Кинетикалық энергия – 3 квадраттық қосылғыш:</div>
+    <div class="fbox or" style="align-self:flex-start"><span class="fm s"><i>E</i> = Σ <span class="fr"><span><i>mv</i>²</span><span>2</span></span> = <span class="bl-t"><span class="fr"><span><i>mv<sub>x</sub></i>²</span><span>2</span></span></span> + <span class="fr"><span><i>mv<sub>y</sub></i>²</span><span>2</span></span> + <span style="color:#c9c9c3"><span class="fr"><span><i>mv<sub>z</sub></i>²</span><span>2</span></span></span></span></div>
+    <div id="vbars"></div>
+    <div class="card" style="padding:10px 16px"><span class="txt">Әр қосылғыш – бір еркіндік дәрежесі. Әрқайсысына қанша энергия келеді? <b class="or-t">→ 8–9-слайд</b></span></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Ілгерілемелі қозғалыс</b> – дененің барлық нүктесі бірдей жылжитын қозғалыс, оны бір нүктенің қозғалысымен сипаттауға болады. Бөлшектің орны үш координатамен (x, y, z), жылдамдығы үш құраушымен (vx, vy, vz) беріледі, демек 3 еркіндік дәрежесі бар. v² = vx² + vy² + vz². Ілгерілемелі кинетикалық энергия E = mv²/2 = mvx²/2 + mvy²/2 + mvz²/2: толық энергия үш бөліктің қосындысы, әр бөлік бір дәрежеге сәйкес. Дәл осы жерден «әр дәрежеге қанша энергия келеді?» деген сұрақ туады, жауабы 8–9-слайдтарда.</div>
+</section>
+
+<!-- 6 КЛАССИКАЛЫҚ ЖӘНЕ КВАНТТЫҚ -->
+<section class="slide" data-n="6">
+ <div class="hd"><div class="h1">1-бөлім · Кванттық теория</div><div class="h2">Классикалық және кванттық сипаттама</div></div>
+ <div class="pg">06</div>
+ <div class="body cc">
+  <table class="tb" style="margin-top:-6px">
+   <tr><th style="width:21%">Белгі</th><th style="width:39%">Классикалық физика</th><th>Кванттық физика</th></tr>
+   <tr><td>Энергия</td><td>Үздіксіз, кез келген мән</td><td>Дискретті, рұқсат етілген мәндер</td></tr>
+   <tr><td>Сәуле шығару</td><td>Кез келген мөлшерде</td><td><i>E</i> = <i>n</i>·<i>h</i>·ν үлестерімен</td></tr>
+   <tr><td>Бөлшек табиғаты</td><td>Тек бөлшек, нақты траектория</td><td>Бөлшектік-толқындық: λ = <span class="fr"><span><i>h</i></span><span><i>p</i></span></span></td></tr>
+   <tr><td>Күй сипаттамасы</td><td>Координата мен импульс бір мезгілде белгілі</td><td>Белгісіздік: Δ<i>x</i>·Δ<i>p</i> ≥ <span class="fr"><span>ħ</span><span>2</span></span></td></tr>
+   <tr><td>Қолданылу аймағы</td><td>Макродене, жоғары температура</td><td>Атом, молекула, төмен температура</td></tr>
+  </table>
+  <div class="row" style="gap:22px;margin-top:12px">
+   <div class="card or" style="flex:1;text-align:center;padding:12px">
+    <div class="txt dim" style="font-size:15px">Қорапшадағы бөлшек (ұзындығы <i>L</i>), <i>n</i> = 1, 2, 3, …</div>
+    <div class="fm" style="margin-top:4px"><i>E<sub>n</sub></i> = <span class="fr"><span><i>n</i>²<i>h</i>²</span><span>8<i>mL</i>²</span></span></div>
+   </div>
+   <div class="card bl" style="flex:1;text-align:center;padding:12px">
+    <div class="txt dim" style="font-size:15px">Гармониялық осциллятор (тербеліс), <i>n</i> = 0, 1, 2, …</div>
+    <div class="fm" style="margin-top:4px"><i>E<sub>n</sub></i> = (<i>n</i> + <span class="fr"><span>1</span><span>2</span></span>)·<i>h</i>ν</div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Салыстыру.</b> Классикада энергия үздіксіз, кез келген мән қабылдайды; кванттық физикада байланысқан күйлерде энергия дискретті. Сәуле шығару E = n·h·ν үлестерімен жүреді. Бөлшек классикада нақты траекториямен қозғалады, кванттық физикада корпускулалық-толқындық дуализм (λ = h/p) және белгісіздік принципі Δx·Δp ≥ ħ/2 орындалады. Классикалық сипаттама макродене мен жоғары температураға, кванттық сипаттама атом, молекула және төмен температураға тән. Мысалдар: ұзындығы L тұйық кеңістіктегі бөлшек үшін E_n = n²h²/(8mL²), n = 1, 2, 3…; гармониялық осциллятор үшін E_n = (n + ½)hν, n = 0, 1, 2… Ілгерілемелі қозғалыста деңгейлер арасы өте аз, сондықтан қалыпты температурада оны классикалық түрде сипаттауға болады. Бұл келесі бөлімдегі ½kT формуласының негізі.</div>
+</section>
+
+<!-- 7 КІРІСПЕ -->
+<section class="slide" data-n="7">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Кіріспе, мақсат және міндеттер</div></div>
+ <div class="pg">07</div>
+ <div class="body cc">
+  <div class="row" style="gap:24px">
+   <div class="col" style="flex:1.05;gap:14px">
+    <div class="card" style="padding:14px 20px">
+     <div class="ttl or">Теорема не дейді?</div>
+     <div class="txt" style="margin-top:6px">Жылулық тепе-теңдікте әр квадраттық дәрежеге орта есеппен <b class="or-t"><span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></b> энергия келеді</div>
+    </div>
+    <div class="card" style="padding:14px 20px">
+     <div class="ttl or">Өзектілігі</div>
+     <div class="txt" style="margin-top:6px">Идеал газдың күй теңдеуін, газдар мен қатты денелердің жылу сыйымдылығын түсіндіреді. Орындалмайтын жерлері кванттық теорияның пайда болуына түрткі болды</div>
+    </div>
+    <div class="card or" style="padding:14px 20px">
+     <div class="ttl">Мақсаты</div>
+     <div class="txt" style="margin-top:6px"><i>E</i> = <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i> формуласының физикалық мағынасын, қорытылуын және қолданылу шектерін қарастыру</div>
+    </div>
+   </div>
+   <div class="card" style="flex:1;padding:16px 22px">
+    <div class="ttl or" style="margin-bottom:10px">Міндеттері</div>
+    <div id="tasks"></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Кіріспе.</b> Классикалық статистикалық физикада жүйенің орташа энергиясы мен температура арасындағы байланысты энергияның тең бөліну теоремасы анықтайды. Теорема бойынша жылулық тепе-теңдікте энергиясы квадраттық түрде тәуелді әрбір еркіндік дәрежесіне орташа ½k_BT энергия сәйкес келеді, мұндағы k_B – Больцман тұрақтысы, T – абсолют температура. Тақырыптың өзектілігі: теорема идеал газдың күй теңдеуін, газдар мен қатты денелердің жылу сыйымдылығын түсіндіруге мүмкіндік береді, ал оның орындалмайтын жерлері кванттық теорияның пайда болуына түрткі болды. Жұмыстың мақсаты – ілгерілемелі еркіндік дәрежесіне сәйкес келетін орташа энергияның (E = ½k_BT) физикалық мағынасын, қорытылуын және қолданылу шектерін қарастыру. Міндеттері: 1) еркіндік дәрежесі және квадраттық энергия ұғымдарын анықтау; 2) теореманы тұжырымдап, қорытылуын көрсету; 3) ілгерілемелі, айналмалы және тербелмелі қозғалыстарға келетін энергияны салыстыру; 4) теореманың қолданылу шарттары мен кванттық шектеулерін талдау.</div>
+</section>
+
+<!-- 8 КВАДРАТТЫҚ ДӘРЕЖЕ -->
+<section class="slide" data-n="8">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Квадраттық дәреже және теореманың тұжырымы</div></div>
+ <div class="pg">08</div>
+ <div class="body cc">
+  <div class="row" style="gap:22px">
+   <div class="col" style="flex:1;gap:14px">
+    <div class="card" style="padding:14px 20px">
+     <div class="ttl or">Еркіндік дәрежесі</div>
+     <div class="txt" style="margin-top:6px">Жүйенің энергияны жинақтай алатын тәуелсіз тәсілі. Дұрыс санау – теореманы қолданудағы басты қадам</div>
+    </div>
+    <div class="card" style="padding:14px 20px">
+     <div class="ttl or">Квадраттық дәреже</div>
+     <div class="txt" style="margin-top:6px">Энергиясы шаманың квадратына тәуелді дәреже: <i>E</i> ∝ <i>cx</i>²</div>
+     <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap"><span class="tag"><span class="fr"><span>1</span><span>2</span></span><i>mv</i>² – кинетикалық</span><span class="tag bl"><span class="fr"><span>1</span><span>2</span></span><i>kx</i>² – серіппенің потенциалдық</span></div>
+    </div>
+    <div class="card or" style="padding:14px 20px;text-align:center">
+     <div class="txt dim" style="font-size:15px">Теореманың тұжырымы</div>
+     <div class="fm" style="font-size:32px">⟨<i>E</i>⟩ = <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i> &nbsp;<span style="font-size:20px">әр квадраттық мүшеге</span></div>
+     <div class="txt dim" style="font-size:15px;margin-top:2px">жылу сыйымдылығына үлесі – <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub></div>
+    </div>
+   </div>
+   <div class="card bl" style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px">
+    <div class="ttl">Модель: <i>f</i> квадраттық дәреже</div>
+    <div class="fm s" style="text-align:center"><i>U</i> = <i>N</i><i>f</i>·<span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></div>
+    <div id="fdots" style="display:flex;gap:10px;justify-content:center;margin:2px 0"></div>
+    <div class="ctl"><span><i>f</i></span><input type="range" id="sF" min="1" max="8" step="1" value="3"><b id="vF">3</b></div>
+    <div class="ctl"><span><i>T</i></span><input type="range" id="sT8" min="100" max="1000" step="10" value="300"><b id="vT8">300 К</b></div>
+    <div class="txt" id="rd8" style="font-size:16px;line-height:1.5"></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Квадраттық еркіндік дәрежесі</b> деп энергиясы қандай да бір шаманың квадратына тәуелді дәрежені айтады. Мұндай мүшелерге кинетикалық энергия ½mv² және серіппенің потенциалдық энергиясы ½kx² жатады. Тек квадраттық мүшелер үшін ғана бір дәрежеге ½k_BT энергия келеді. <b>Теореманың тұжырымы:</b> жылулық тепе-теңдіктегі классикалық жүйеде энергиядағы әрбір тәуелсіз квадраттық мүше орта есеппен ½k_BT-ге тең; мұндай дәреже жүйенің жылу сыйымдылығына ½k_B үлес қосады. Теореманың бастапқы идеясы: жылулық тепе-теңдікте энергия әртүрлі түрлер арасында орта есеппен тең бөлінеді, мысалы ілгерілемелі қозғалыстағы бір дәрежеге келетін орташа кинетикалық энергия айналмалы қозғалыстағы энергиямен тең болуы тиіс. Егер әр бөлшекте f квадраттық еркіндік дәрежесі болса, N бөлшектен тұратын жүйенің ішкі энергиясы U = N·f·½k_BT. Интерактивті модельде f және T мәнін өзгертіп, ішкі энергияның қалай өзгеретінін көруге болады.</div>
+</section>
+
+<!-- 9 МАКСВЕЛЛ ЖӘНЕ ГАУСС -->
+<section class="slide" data-n="9">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Әр квадраттық дәрежеге – <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></div></div>
+ <div class="pg">09</div>
+ <div class="body">
+  <div class="row" style="gap:22px">
+   <div class="col" style="width:520px;gap:12px">
+    <div class="card or" style="padding:12px 18px">
+     <div class="txt">Жылулық тепе-теңдікте әрбір тәуелсіз квадраттық мүше орта есеппен:</div>
+     <div class="fm" style="text-align:center;margin-top:4px;font-size:34px">⟨<i>E</i>⟩ = <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></div>
+    </div>
+    <div class="card" style="padding:12px 18px">
+     <div class="ttl" style="font-size:18px"><span class="or-t">а)</span> Максвелл таралуы арқылы</div>
+     <div class="fm xs" style="margin-top:4px"><i>f</i>(<i>v</i>) = 4π(<span class="fr"><span><i>m</i></span><span>2π<i>kT</i></span></span>)<sup>3/2</sup><i>v</i>² exp(−<span class="fr"><span><i>mv</i>²</span><span>2<i>kT</i></span></span>)</div>
+     <div class="fm xs" style="margin-top:6px">⟨<i>K</i>⟩ = ∫<sub>0</sub><sup>∞</sup> <span class="fr"><span>1</span><span>2</span></span><i>mv</i>² <i>f</i>(<i>v</i>)d<i>v</i> = <span class="fr"><span>3</span><span>2</span></span><i>kT</i></div>
+    </div>
+    <div class="card" style="padding:12px 18px">
+     <div class="ttl" style="font-size:18px"><span class="or-t">ә)</span> Гаусс интегралы арқылы (энергия <i>cx</i>²)</div>
+     <div class="fm xs" style="margin-top:4px">∫<sub>−∞</sub><sup>∞</sup> exp(−<span class="fr"><span><i>cx</i>²</span><span><i>kT</i></span></span>)d<i>x</i> = (<span class="fr"><span>π<i>kT</i></span><span><i>c</i></span></span>)<sup>1/2</sup></div>
+     <div class="fm xs" style="margin-top:6px"><i>U</i> = <i>kT</i>² <span class="fr"><span>d</span><span>d<i>T</i></span></span> ln(…)<sup>1/2</sup> = <span class="fr"><span>1</span><span>2</span></span><i>kT</i></div>
+    </div>
+   </div>
+   <div class="card" style="flex:1;padding:8px 12px;display:flex;flex-direction:column">
+    <div class="ttl" style="font-size:17px;text-align:center">Максвелл таралуы (аргон атомдары)</div>
+    <div id="ch-max"></div>
+    <div style="display:flex;gap:12px;align-items:center;margin-top:2px">
+     <div style="flex:1"><div class="ctl"><button class="pbtn" id="bPlay1" title="Автоматты">▶</button><span style="width:auto"><i>T</i></span><input type="range" id="sT1" min="100" max="1200" step="10" value="300"><b id="vT1">300 К</b></div><div class="txt" id="rd1" style="font-size:15px;line-height:1.4;margin-top:4px"></div></div>
+     <canvas id="cv1" width="230" height="104" style="width:230px;height:104px;flex:none"></canvas>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Теорема.</b> Жылулық тепе-теңдіктегі классикалық жүйеде энергиядағы әрбір тәуелсіз квадраттық мүше орта есеппен ½kBT-ге тең. Квадраттық мүшелерге кинетикалық энергия ½mv² және серіппенің потенциалдық энергиясы ½kx² жатады. <b>Максвелл арқылы:</b> f(v) = 4π(m/2πkT)^{3/2} v² exp(−mv²/2kT); осымен ⟨K⟩ = ∫½mv² f(v)dv = (3/2)kT, яғни бір ілгерілемелі дәрежеге ½kT. <b>Гаусс интегралы арқылы:</b> энергиясы cx² болатын дәреже үшін ∫exp(−cx²/kT)dx = (πkT/c)^{1/2}, одан U = kT² d/dT ln(...)^{1/2} = ½kT. Графикте аргон үшін 100, 300 және 900 К: максимум үлкен жылдамдыққа ығысып, қисық кеңейеді, ал ⟨K⟩ = 2,1·10⁻²¹, 6,2·10⁻²¹ және 18,6·10⁻²¹ Дж, яғни T-ға тура пропорционал.</div>
+</section>
+
+<!-- 10 ЖАЛПЫ ДӘЛЕЛ ЖӘНЕ ИДЕАЛ ГАЗ -->
+<section class="slide" data-n="10">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Жалпы дәлел: нәтиже <i>α</i>-ға тәуелсіз</div></div>
+ <div class="pg">10</div>
+ <div class="body cc">
+  <div class="row" style="gap:22px">
+   <div class="col" style="width:470px;gap:12px">
+    <div class="card" style="padding:12px 18px">
+     <div class="ttl" style="font-size:18px"><span class="or-t">б)</span> Жалпы дәлел</div>
+     <div class="txt" style="font-size:16px;margin-top:4px">Гамильтониан <i>H</i> = <i>H</i>′ + <i>αx</i>² болса, <i>x</i> дәрежесінің үлесі:</div>
+     <div class="fm s" style="text-align:center;margin-top:4px"><i>α</i>⟨<i>x</i>²⟩ = <i>α</i>·<span class="fr"><span>1</span><span>2</span></span>·<span class="fr"><span><i>k</i><sub>B</sub><i>T</i></span><span><i>α</i></span></span> = <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></div>
+     <div class="txt dim" style="font-size:15px;margin-top:4px">Нәтиже байланыс коэффициентіне <i>α</i> тәуелді емес. Жылу сыйымдылығына үлесі – <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub></div>
+    </div>
+    <div class="card or" style="padding:12px 18px">
+     <div class="ttl" style="font-size:18px">Идеал газ</div>
+     <div class="txt" style="font-size:16px;margin-top:4px">Энергия тек кинетикалық, координаттар кірмейді: 3<i>N</i> квадраттық дәреже (импульстар)</div>
+     <div class="fm s" style="text-align:center;margin-top:4px"><i>E</i> = <span class="fr"><span>3</span><span>2</span></span><i>Nk</i><sub>B</sub><i>T</i> &nbsp;⇒&nbsp; <span class="fr"><span>3</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i> – бір бөлшекке</div>
+    </div>
+   </div>
+   <div class="card" style="flex:1;padding:10px 12px;display:flex;flex-direction:column">
+    <div class="ttl" style="font-size:17px;text-align:center">Модель: потенциалдық ұңғыма <i>αx</i>² және Больцман таралуы</div>
+    <div id="ch-well"></div>
+    <div class="ctl"><span><i>α</i></span><input type="range" id="sA" min="0.5" max="4" step="0.1" value="1.5"><b id="vA">1,5</b></div>
+    <div class="ctl"><span><i>k</i><sub>B</sub><i>T</i></span><input type="range" id="sKT" min="0.5" max="3" step="0.1" value="1.5"><b id="vKT">1,5</b></div>
+    <div class="txt" id="rdw" style="font-size:15px;line-height:1.45;margin-top:2px"></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Жалпы дәлел.</b> Гамильтониан H = H′ + αx² түрінде жазылса, x дәрежесінің үлесі α⟨x²⟩ = α·½·k_BT/α = ½k_BT. Бұл нәтиже α байланыс коэффициентіне тәуелді емес: әр квадраттық дәреже қандай болса да, орташа энергияға бірдей ½k_BT қосады, жылу сыйымдылығына үлесі де тұрақты және ½k_B-ге тең. <b>Идеал газ.</b> Идеал газда энергия тек бөлшектердің кинетикалық энергиясынан тұрады, ал кеңістік координаттары энергияға кірмейді. Сондықтан 3N квадраттық дәреже (импульстар) болады және E = (3/2)Nk_BT. Бір бөлшекке шаққанда (3/2)k_BT, яғни бір атомды идеал газдағы бөлшектің орташа энергиясы үш ілгерілемелі дәрежеге сәйкес келеді. <b>Модель:</b> α-ны өзгертсек, ұңғыма тарылады немесе кеңейеді, ⟨x²⟩ өзгереді, бірақ параболаның ½k_BT сызығымен қиылысатын нүктесі дәл ±√⟨x²⟩ болып қалады, яғни α⟨x²⟩ = ½k_BT тұрақты.</div>
+</section>
+
+<!-- 11 ҚОЗҒАЛЫС ТҮРЛЕРІ БОЙЫНША ЭНЕРГИЯ -->
+<section class="slide" data-n="11">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Қозғалыс түрлері бойынша энергия</div></div>
+ <div class="pg">11</div>
+ <div class="body cc">
+  <div class="row" style="gap:22px">
+   <div style="flex:1.05">
+    <table class="tb" style="margin-top:-6px">
+     <tr><th>Қозғалыс түрі</th><th>Дәреже</th><th>Орташа энергия</th></tr>
+     <tr><td>Ілгерілемелі</td><td>3</td><td><span class="fr"><span>3</span><span>2</span></span> <i>k</i><sub>B</sub><i>T</i></td></tr>
+     <tr><td>Айналмалы, сызықтық молекула</td><td>2</td><td><i>k</i><sub>B</sub><i>T</i></td></tr>
+     <tr><td>Айналмалы, сызықтық емес</td><td>3</td><td><span class="fr"><span>3</span><span>2</span></span> <i>k</i><sub>B</sub><i>T</i></td></tr>
+     <tr><td>Тербелмелі (бір мода)</td><td>кин. + пот.</td><td><i>k</i><sub>B</sub><i>T</i></td></tr>
+    </table>
+    <div class="txt dim" style="font-size:15px;margin-top:4px">Әр бағытқа <span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i>; сызықтық молекула – қатты өзек моделі; тербелмеде екі квадраттық мүше қосылады</div>
+   </div>
+   <div class="card" style="flex:1;padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+    <div class="ttl" style="font-size:17px">Модель: молекула түрін таңдаңыз</div>
+    <div id="mbtn" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <label class="txt" style="font-size:16px;cursor:pointer"><input type="checkbox" id="cVib" style="accent-color:#f2a71b;width:18px;height:18px;vertical-align:middle;margin-right:8px">бір тербелмелі мода қосу</label>
+    <div id="bars"></div>
+    <div class="fm s" id="uTot" style="text-align:center"></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Қозғалыс түрлері.</b> Молекуланың қозғалысы ілгерілемелі, айналмалы және тербелмелі болады. Әр түрдегі қозғалыстың квадраттық дәрежелерін санап, орташа энергияны табуға болады. Ілгерілемелі: 3 дәреже, (3/2)k_BT, әр бағытқа ½k_BT. Айналмалы, сызықтық молекула: 2 дәреже, k_BT (қатты өзек моделі). Айналмалы, сызықтық емес молекула: 3 дәреже, (3/2)k_BT (үш бас ось бойынша). Тербелмелі (бір мода): кинетикалық және потенциалдық, екі квадраттық мүшенің үлесі қосылып, k_BT. Модельде молекула түрін таңдап, тербелмелі модаға қосуға болады: бағандар k_BT бірлігімен кестедегі мәндерден жиналады (бір атомды газда айналу да, тербеліс те жоқ).</div>
+</section>
+
+<!-- 12 БІР ЖӘНЕ ЕКІ АТОМДЫ ГАЗ -->
+<section class="slide" data-n="12">
+ <div class="hd"><div class="h1">2-бөлім · Тең бөліну теоремасы</div><div class="h2">Бір атомды және екі атомды газ</div></div>
+ <div class="pg">12</div>
+ <div class="body cc">
+  <div class="row" style="gap:22px">
+   <div class="card" style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag" style="align-self:flex-start">Бір атомды (He, Ne, Ar)</span>
+    <svg viewBox="0 0 300 110" width="100%"><rect x="6" y="6" width="288" height="98" rx="10" fill="none" stroke="#8f8f8c" stroke-dasharray="5 5"/><circle r="14" fill="#2b86b0" stroke="#e8e8e2" stroke-width="2"><animate attributeName="cx" values="40;260;40" dur="3.2s" repeatCount="indefinite"/><animate attributeName="cy" values="30;78;30" dur="2.1s" repeatCount="indefinite"/></circle></svg>
+    <div class="txt" style="font-size:17px">Ішкі айналу мен тербеліс жоқ, тек 3 ілгерілемелі дәреже</div>
+    <div class="fm s" style="text-align:center">⟨<i>E</i>⟩ = <span class="fr"><span>3</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i>, &nbsp;<span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i> – әр дәрежеге</div>
+   </div>
+   <div class="card or" style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag or" style="align-self:flex-start">Екі атомды (N₂, O₂, H₂)</span>
+    <svg viewBox="0 0 300 110" width="100%"><rect x="6" y="6" width="288" height="98" rx="10" fill="none" stroke="#8f8f8c" stroke-dasharray="5 5"/><g><animateTransform attributeName="transform" type="translate" values="60 55;240 55;60 55" dur="5s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="rotate" values="0;360" dur="2.4s" repeatCount="indefinite"/><line x1="-20" y1="0" x2="20" y2="0" stroke="#e8e8e2" stroke-width="4"/><circle cx="-22" r="12" fill="#f2a71b" stroke="#e8e8e2" stroke-width="2"/><circle cx="22" r="12" fill="#f2a71b" stroke="#e8e8e2" stroke-width="2"/></g></g></svg>
+    <div class="txt" style="font-size:17px">Қатты стержень моделі: 5 мода = 3 ілгерілемелі + 2 айналмалы</div>
+    <div class="fm s" style="text-align:center"><i>u</i> = <span class="fr"><span>5</span><span>2</span></span><i>kT</i> &nbsp;<span style="font-size:18px">(тәжірибеге сәйкес)</span></div>
+   </div>
+  </div>
+  <div class="card bl" style="margin-top:16px;padding:12px 20px">
+   <div class="txt" style="font-size:18px">Тербеліс ескерілсе, классикалық болжам <b class="or-t"><i>u</i> = <span class="fr"><span>7<i>kT</i></span><span>2</span></span></b> еді, бірақ бөлме температурасында тек ілгерілемелі және айналмалы дәрежелер белсенді. Төмен <i>T</i>-де айналу, жоғары <i>T</i>-де тербеліс «қосылады», бұл – классикалық теореманың шегі және кванттық теорияға қажеттіліктің белгісі</div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Бір атомды газ</b> (He, Ne, Ar): бөлшектің ішкі айналуы мен тербелісі жоқ, тек үш ілгерілемелі дәрежесі бар, сондықтан орташа энергия (3/2)k_BT, ал әр ілгерілемелі дәрежеге ½k_BT келеді. <b>Екі атомды газ.</b> Қатты стержень моделінде бес мода бар: үш ілгерілемелі және екі айналмалы. Егер тербеліс те ескерілсе, классикалық болжам u = 7kT/2 болар еді. Бірақ бөлме температурасында тек ілгерілемелі және айналмалы дәрежелер белсенді, сондықтан u = 5kT/2, және бұл тәжірибеге сәйкес келеді. Төмен температурада айналу, ал жоғары температурада тербеліс «қосылатыны» жылу сыйымдылығының сатылы өзгерісінен көрінеді (16-слайд): бұл классикалық теореманың шегі және кванттық теорияға қажеттіліктің белгісі. Температураның энергияға әсері: орташа энергия температураға тура пропорционал, ал бір дәрежеге келетін энергия бөлшектің массасына да, байланыс күшіне де тәуелсіз; бірдей температурада әртүрлі газ бөлшектерінің ілгерілемелі қозғалысының орташа кинетикалық энергиясы бірдей.</div>
+</section>
+
+<!-- 8 ЕСЕП -->
+<section class="slide" data-n="13">
+ <div class="hd"><div class="h1">3-бөлім · Есептеу</div><div class="h2">Есеп: гелий, 1 моль, 300 → 600 К</div></div>
+ <div class="pg">13</div>
+ <div class="body cc">
+  <div class="row" style="gap:22px">
+   <div class="card" style="width:340px;padding:12px 18px">
+    <div class="ttl or">Берілгені</div>
+    <div class="txt" style="font-size:17px;margin-top:6px;line-height:1.55">He, <i>n</i> = 1 моль<br><i>T</i><sub>1</sub> = 300 К<div class="ctl" style="margin:2px 0"><span style="width:34px"><i>T</i><sub>2</sub></span><input type="range" id="sT13" min="300" max="1200" step="30" value="600"><b id="vT13" style="min-width:60px;font-size:15px">600 К</b></div><i>M</i> = 4,00·10<sup>−3</sup> кг/моль<br><i>m</i> = 6,65·10<sup>−27</sup> кг</div>
+    <div class="txt dim" style="font-size:15px;margin-top:6px">Табу: ⟨<i>E</i>⟩<sub>1</sub>, <i>U</i><sub>1</sub>, <i>U</i><sub>2</sub>, Δ<i>U</i></div>
+   </div>
+   <div class="col" style="flex:1;gap:10px">
+    <div class="card" style="padding:9px 16px"><span class="tag" style="margin-right:12px">1</span><span class="fm xs">⟨<i>E</i>⟩<sub>1</sub> = <span class="fr"><span>3</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i><sub>1</sub> = <span class="fr"><span>3</span><span>2</span></span>·1,381·10<sup>−23</sup>·300</span></div>
+    <div class="card" style="padding:9px 16px"><span class="tag" style="margin-right:12px">2</span><span class="fm xs"><i>U</i><sub>1</sub> = <span class="fr"><span>3</span><span>2</span></span><i>nRT</i><sub>1</sub> = <span class="fr"><span>3</span><span>2</span></span>·1·8,314·300</span></div>
+    <div class="card" style="padding:9px 16px"><span class="tag" style="margin-right:12px">3</span><span class="fm xs"><i>U</i><sub>2</sub> = <span class="fr"><span>3</span><span>2</span></span><i>nRT</i><sub>2</sub>;&nbsp; Δ<i>U</i> = <span class="fr"><span>3</span><span>2</span></span><i>nR</i>(<i>T</i><sub>2</sub> − <i>T</i><sub>1</sub>)</span></div>
+   </div>
+  </div>
+  <div class="row" style="gap:16px;margin-top:26px">
+   <div class="card or" style="flex:1.25;text-align:center"><div class="txt dim" style="font-size:15px">⟨E⟩₁</div><div class="fm" style="font-size:32px;color:var(--or)">≈ 6,21·10<sup>−21</sup> Дж</div><div class="txt dim" style="font-size:15px">≈ 0,039 эВ</div></div>
+   <div class="card or" style="flex:1;text-align:center"><div class="txt dim" style="font-size:15px"><i>U</i>₁</div><div class="fm" style="font-size:32px;color:var(--or)">≈ 3,74 кДж</div></div>
+   <div class="card or" style="flex:1;text-align:center"><div class="txt dim" style="font-size:15px"><i>U</i>₂</div><div class="fm" id="tU2" style="font-size:32px;color:var(--or)">≈ 7,48 кДж</div><div class="txt dim" id="tE2" style="font-size:15px">⟨E⟩₂ ≈ 1,24·10⁻²⁰ Дж</div></div>
+   <div class="card or" style="flex:1;text-align:center"><div class="txt dim" style="font-size:15px">Δ<i>U</i></div><div class="fm" id="tdU" style="font-size:32px;color:var(--or)">≈ 3,74 кДж</div></div>
+  </div>
+  <div class="card bl" style="margin-top:26px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:20px">
+   <div><span class="tag bl">Тексеру</span></div>
+   <div class="fm xs"><i>N</i><sub>A</sub>⟨<i>E</i>⟩<sub>1</sub> = 6,022·10<sup>23</sup>·6,21·10<sup>−21</sup> ≈ 3,74·10<sup>3</sup> Дж = <i>U</i><sub>1</sub></div>
+   <div class="txt" id="tRat" style="font-size:16px"><span class="fr"><span>T₂</span><span>T₁</span></span> = 2,00 → <span class="fr"><span>U₂</span><span>U₁</span></span> = 2,00</div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Есеп.</b> Берілгені: гелий, n = 1 моль, T₁ = 300 К, T₂ = 600 К, M = 4,00·10⁻³ кг/моль, m = 6,65·10⁻²⁷ кг. Бір молекуланың орташа энергиясы ⟨E⟩₁ = (3/2)·1,381·10⁻²³·300 ≈ 6,21·10⁻²¹ Дж ≈ 0,039 эВ. Бір моль газдың ішкі энергиясы U₁ = (3/2)·1·8,314·300 ≈ 3,74·10³ Дж. Тексеру: N_A⟨E⟩₁ = 6,022·10²³·6,21·10⁻²¹ ≈ 3,74·10³ Дж, нәтиже сәйкес. 600 К кезінде ⟨E⟩₂ ≈ 1,24·10⁻²⁰ Дж, U₂ ≈ 7,48·10³ Дж, ΔU = (3/2)·1·8,314·300 ≈ 3,74·10³ Дж. Жауабы: ⟨E⟩₁ ≈ 6,21·10⁻²¹ Дж (0,039 эВ); U₁ ≈ 3,74 кДж; U₂ ≈ 7,48 кДж; ΔU ≈ 3,74 кДж. Температура екі есе артқанда орташа энергия да, ішкі энергия да екі есе артады.</div>
+</section>
+
+<!-- 9 ТЕМПЕРАТУРАНЫҢ ӘСЕРІ -->
+<section class="slide" data-n="14">
+ <div class="hd"><div class="h1">3-бөлім · Температураның әсері</div><div class="h2">⟨<i>E</i>⟩ ∝ <i>T</i>, ал <i>v</i><sub>rms</sub> ∝ √<i>T</i></div></div>
+ <div class="pg">14</div>
+ <div class="body cc">
+  <div class="row" style="gap:20px">
+   <div class="card" style="width:600px;padding:8px 10px">
+    <div id="ch-lin"></div><div class="ctl"><span><i>T</i></span><input type="range" id="sT14" min="50" max="900" step="10" value="300"><b id="vT14">300 К</b></div><div class="txt" id="rd14" style="font-size:16px;line-height:1.5;padding:2px 6px"></div>
+   </div>
+   <div class="col" style="flex:1;gap:10px">
+    <table class="tb" style="margin-top:-6px">
+     <tr><th>T, К</th><th>⟨E⟩, Дж</th><th>v<sub>rms</sub> (He), м/с</th></tr>
+     <tr><td>150</td><td>3,11·10⁻²¹</td><td>970</td></tr>
+     <tr><td>300</td><td>6,21·10⁻²¹</td><td>1370</td></tr>
+     <tr><td>600</td><td>1,24·10⁻²⁰</td><td>1930</td></tr>
+     <tr><td>1200</td><td>2,49·10⁻²⁰</td><td>2730</td></tr>
+    </table>
+    <div class="fm s" style="text-align:center"><i>v</i><sub>rms</sub> = <span class="sq"><svg class="rad" viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0.5 12L2.5 10.5L5.5 19L9.5 0.8H10" vector-effect="non-scaling-stroke"/></svg><span class="ov"><span class="fr"><span>3<i>k</i><sub>B</sub><i>T</i></span><span><i>m</i></span></span></span></span></div>
+    <div class="card or" style="padding:9px 14px"><span class="txt" style="font-size:16px"><b class="or-t">⟨E⟩ массаға тәуелсіз</b>, ал <b class="or-t">v<sub>rms</sub> массаға тәуелді</b>: 300 К-де He ≈ 1,37 км/с, N₂ ≈ 517 м/с</span></div>
+   </div>
+  </div>
+  <div class="card bl" style="margin-top:14px;padding:9px 18px"><span class="txt" style="font-size:17px">Заң тек кельвинге қатысты: <b>300 → 600 К</b> – екі есе, ал <b>27 → 54 °C</b> (300 → 327 К) – тек <b class="bl-t">≈ 9 %</b></span></div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Температураның әсері.</b> Орташа кинетикалық энергия абсолют температураға түзу пропорционал: ⟨E⟩ ∝ T. Түзу координат басынан өтеді, көлбеуі (3/2)k_B ≈ 2,07·10⁻²³ Дж/К, яғни әрбір 100 К қыздыру молекулаға ≈ 2,07·10⁻²¹ Дж қосады. Графиктің сол осі – Дж, оң осі – эВ. Екі есе арту заңы тек кельвинмен өлшенген температураға қатысты: 300 → 600 К жоғарылауы 27 → 327 °C-қа сәйкес, ал 27 → 54 °C (300 → 327 К) энергияны небәрі 9 % арттырады. <b>Маңызды ажырату:</b> орташа энергия молекула массасына тәуелді емес, бірақ v_rms = √(3k_BT/m) = √(3RT/M) массаға тәуелді және энергиядан баяуырақ өседі (∝ √T). Бірдей температурада ауыр молекулалар баяу, жеңіл молекулалар жылдам қозғалады, ал орташа энергиялары бірдей. 300 К-де гелий үшін v_rms ≈ 1,37 км/с, азот үшін (M = 28,0·10⁻³ кг/моль) ≈ 517 м/с.</div>
+</section>
+
+<!-- 10 КВАНТТЫҚ ШАРТТАР -->
+<section class="slide" data-n="15">
+ <div class="hd"><div class="h1">3-бөлім · Кванттық шарттар</div><div class="h2"><span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i> қашан орындалады?</div></div>
+ <div class="pg">15</div>
+ <div class="body cc">
+  <div class="row" style="gap:18px;min-height:300px">
+   <div class="card or" style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag or" style="align-self:flex-start">1-шарт</span>
+    <div class="fm" style="font-size:30px"><i>k</i><sub>B</sub><i>T</i> ≫ Δ<i>E</i></div>
+    <div class="txt" style="font-size:18px"><i>L</i> = 1 см, гелий: <i>ε</i><sub>1</sub> ≈ 8,3·10<sup>−38</sup> Дж</div>
+    <div class="fm s">Δ<i>E</i> ≈ 2√(<i>ε</i><sub>1</sub><i>k</i><sub>B</sub><i>T</i>) ≈ 3,7·10<sup>−29</sup> Дж</div>
+    <div class="fm s"><i>k</i><sub>B</sub><i>T</i> ≈ 4,14·10<sup>−21</sup> Дж</div>
+    <div class="fbox or" style="text-align:center;margin-top:auto"><span class="fm" style="font-size:27px">Δ<i>E</i>/<i>k</i><sub>B</sub><i>T</i> ≈ 9·10<sup>−9</sup></span></div>
+   </div>
+   <div class="card or" style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag or" style="align-self:flex-start">2-шарт</span>
+    <div class="fm" style="font-size:30px"><i>nλ<sub>T</sub></i>³ ≪ 1</div>
+    <div class="fm s"><i>λ<sub>T</sub></i> = <span class="fr"><span><i>h</i></span><span><span class="sq"><svg class="rad" viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0.5 12L2.5 10.5L5.5 19L9.5 0.8H10" vector-effect="non-scaling-stroke"/></svg><span class="ov">2π<i>mk</i><sub>B</sub><i>T</i></span></span></span></span> ≈ 0,050 нм</div>
+    <div class="txt" style="font-size:18px">300 К, <i>p</i> = 101 325 Па: <i>n</i><sub>0</sub> ≈ 2,45·10<sup>25</sup> м<sup>−3</sup></div>
+    <div class="fbox or" style="text-align:center;margin-top:auto"><span class="fm" style="font-size:27px"><i>n</i><sub>0</sub><i>λ<sub>T</sub></i>³ ≈ 3,1·10<sup>−6</sup></span></div>
+   </div>
+   <div class="card bl" style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag bl" style="align-self:flex-start">Азғындалу</span>
+    <div class="txt" style="font-size:19px">Егер <i>nλ<sub>T</sub></i>³ ≳ 1, орташа энергия классикалық мәннен өзгеше</div>
+    <div class="txt" style="font-size:19px">Ферми газы, <i>T</i> → 0:</div>
+    <div class="fbox" style="text-align:center;margin-top:auto"><span class="fm" style="font-size:27px">⟨<i>E</i>⟩ = <span class="fr"><span>3</span><span>5</span></span><i>E</i><sub>F</sub> ≠ 0</span></div>
+   </div>
+  </div>
+  <div class="card bl" style="margin-top:14px;padding:12px 20px"><div style="display:flex;gap:26px;align-items:center"><div style="flex:1"><div class="txt" style="font-size:15px;color:var(--dim);margin-bottom:2px">Модель: He, <i>p</i> = 101 325 Па</div><div class="ctl"><span><i>L</i></span><input type="range" id="sL" min="0" max="500" step="1" value="400"><b id="vL">1 см</b></div><div class="ctl"><span><i>T</i></span><input type="range" id="sT15" min="1" max="1000" step="1" value="300"><b id="vT15">300 К</b></div></div><div id="rd15" style="flex:1.25"></div></div></div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Кванттық шарттар.</b> Классикада энергия үздіксіз, сондықтан әр квадраттық дәреже кез келген T-де ½k_BT береді. Кванттық теорияда байланысқан күйлердің энергиясы дискретті, ал шексіз кеңістіктегі еркін бөлшектің спектрі үздіксіз. Дискретті дәреже жылу энергиясын классикалық түрде тек k_BT ≫ ΔE болғанда қабылдайды. <b>1-шарт:</b> L = 1 см ыдыстағы гелийді қорапшадағы бөлшек ретінде алсақ, ε_n = n²h²/(8mL²), ε₁ ≈ 8,3·10⁻³⁸ Дж, ΔE ≈ 2√(ε₁k_BT) ≈ 3,7·10⁻²⁹ Дж ≪ k_BT ≈ 4,14·10⁻²¹ Дж, ΔE/k_BT ≈ 9·10⁻⁹. <b>2-шарт (азғындалмау):</b> жылулық де Бройль толқын ұзындығы бөлшектер арасындағы қашықтықтан әлдеқайда аз болуы керек. Гелий үшін (T = 300 К, p = 101 325 Па, n₀ = p/(k_BT) ≈ 2,45·10²⁵ м⁻³) λ_T = h/√(2πmk_BT) ≈ 0,050 нм, n₀λ_T³ ≈ 3,1·10⁻⁶ ≪ 1. Азғындалу жағдайында (nλ_T³ ≳ 1) орташа энергия классикалық мәннен өзгеше: T → 0 кезінде Ферми газында ⟨E⟩ = (3/5)E_F ≠ 0.</div>
+</section>
+
+<!-- 11 ҚОЗҒАЛЫС ТҮРЛЕРІ ЖӘНЕ Cv -->
+<section class="slide" data-n="16">
+ <div class="hd"><div class="h1">3-бөлім · Қозғалыс түрлері</div><div class="h2">Жылу сыйымдылығының сатылары: <span class="fr"><span><i>C<sub>V</sub></i></span><span><i>R</i></span></span></div></div>
+ <div class="pg">16</div>
+ <div class="body cc">
+  <div class="row" style="gap:20px">
+   <div class="card" style="width:700px;padding:8px 10px">
+    <div id="ch-cv"></div><div class="ctl"><span><i>T</i></span><input type="range" id="sT16" min="0" max="1000" step="0.1" value="492.4"><b id="vT16">300 К</b></div><div class="txt" id="rd16" style="font-size:17px;padding:2px 6px"></div>
+   </div>
+   <div class="col" style="flex:1;gap:12px">
+    <div class="card" style="padding:10px 16px;display:flex;align-items:center;gap:14px"><span class="tag"><span class="fr"><span>3</span><span>2</span></span></span><span class="txt" style="font-size:17px">ілгерілемелі</span></div>
+    <div class="card" style="padding:10px 16px;display:flex;align-items:center;gap:14px"><span class="tag or"><span class="fr"><span>5</span><span>2</span></span></span><span class="txt" style="font-size:17px">+ айналмалы, <i>θ</i><sub>айн</sub> ≈ 85 К</span></div>
+    <div class="card" style="padding:10px 16px;display:flex;align-items:center;gap:14px"><span class="tag bl"><span class="fr"><span>7</span><span>2</span></span></span><span class="txt" style="font-size:17px">+ тербелмелі, <i>θ</i><sub>тер</sub> ≈ 6200 К</span></div>
+    <div class="card or" style="padding:10px 16px"><div class="txt" style="font-size:17px">Тең бөліну шегі:</div><div class="txt" style="font-size:17px;margin-top:4px">айналу – <b class="or-t"><i>T</i> ≫ <i>θ</i><sub>айн</sub></b></div><div class="txt" style="font-size:17px;margin-top:2px">тербеліс – <b class="or-t"><i>T</i> ≳ <i>θ</i><sub>тер</sub></b></div></div>
+   </div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>C_V сатылары.</b> Жылу сыйымдылығына әр квадраттық дәреже ½k_B (бір мольге ½R) үлес қосады. Бір атомды газда тек ілгерілемелі дәреже бар: C_V = (3/2)R. Екі атомды газда классикалық болжам (тербеліспен) C_V = (7/2)R еді, бірақ тәжірибеде 300 К-де C_V ≈ (5/2)R, өйткені айналмалы дәреже T ≫ θ_айн, ал тербелмелі дәреже T ≳ θ_тер болғанда ғана қосылады. Сутегі үшін θ_айн ≈ 85 К, θ_тер ≈ 6200 К. Графикте (логарифмдік шкала) 3/2 → 5/2 → 7/2 сатылары көрінеді; ол – классикалық теореманың шегі және кванттық теорияға қажеттіліктің белгісі. Қисық есептік модель: қатты ротатор және Эйнштейн осцилляторы, ядролық спин мен диссоциация ескерілмеген. Бір атомды газда электрондық қозу өте жоғары энергияны қажет етеді (He үшін ≈ 19,8 эВ, яғни ≈ 2·10⁵ К), сондықтан (3/2)k_BT өте кең аралықта орындалады.</div>
+</section>
+
+<!-- 12 ҚОЛДАНЫЛУЫ ЖӘНЕ ҚОРЫТЫНДЫ -->
+<section class="slide" data-n="17">
+ <div class="hd"><div class="h1">3-бөлім · Қолданылуы</div><div class="h2">Қолданылуы және қорытынды</div></div>
+ <div class="pg">17</div>
+ <div class="body cc">
+  <div class="row" style="gap:18px;min-height:250px">
+   <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag" style="align-self:flex-start">Газ термометрі</span>
+    <div class="fbox" style="text-align:center"><span class="fm s"><i>T</i> = 273,16 К·<span class="fr"><span><i>p</i></span><span><i>p</i><sub>үш</sub></span></span></span></div>
+    <div class="txt" style="font-size:18px"><i>p</i><sub>үш</sub> = 100,0 кПа, <i>p</i> = 109,8 кПа ⇒ <b class="or-t"><i>T</i> ≈ 300 К</b></div>
+   </div>
+   <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag or" style="align-self:flex-start">Қыздыру, 1 моль He</span>
+    <div class="fm xs"><i>Q<sub>V</sub></i> = <span class="fr"><span>3</span><span>2</span></span><i>nR</i>Δ<i>T</i> ≈ 3,74 кДж</div>
+    <div class="fm xs"><i>Q<sub>p</sub></i> = <span class="fr"><span>5</span><span>2</span></span><i>nR</i>Δ<i>T</i> ≈ 6,24 кДж</div>
+    <div class="txt dim" style="font-size:17px">300 → 600 К; айырмасы <i>nR</i>Δ<i>T</i> ≈ 2,49 кДж – ұлғаю жұмысы</div>
+   </div>
+   <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+    <span class="tag bl" style="align-self:flex-start">Дыбыс жылдамдығы</span>
+    <div class="fbox" style="text-align:center"><span class="fm s"><i>v<sub>s</sub></i> = <span class="sq"><svg class="rad" viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0.5 12L2.5 10.5L5.5 19L9.5 0.8H10" vector-effect="non-scaling-stroke"/></svg><span class="ov"><span class="fr"><span>γ</span><span>3</span></span></span></span>·<i>v</i><sub>rms</sub></span></div>
+    <div class="txt" style="font-size:18px">He (γ = 5/3): <b class="bl-t"><i>v<sub>s</sub></i> ≈ 1019 м/с</b></div>
+   </div>
+  </div>
+  <div class="card or" style="margin-top:20px;padding:20px 26px;text-align:center;border-width:3px">
+   <div class="tag or" style="margin-bottom:10px">Қорытынды</div>
+   <div style="font-size:26px;font-weight:800;line-height:1.3">Әр ілгерілемелі дәрежеге <span class="or-t"><span class="fr"><span>1</span><span>2</span></span><i>k</i><sub>B</sub><i>T</i></span>, тек <span class="or-t"><i>k</i><sub>B</sub><i>T</i> ≫ Δ<i>E</i></span> және <span class="or-t"><i>nλ</i>³ ≪ 1</span> болғанда</div>
+  </div>
+ </div>
+ <div class="foot"></div>
+ <div class="note"><b>Газ термометрі.</b> Тұрақты көлемде p = (2/3)n₀⟨E⟩, яғни қысым орташа энергияға, демек T-ға пропорционал. Идеал газ шегінде температура су үштік нүктесіндегі қысыммен салыстыру арқылы анықталады: T = 273,16 К·p/p_үш. Мысалы, p_үш = 100,0 кПа болғанда p = 109,8 кПа қысым T ≈ 300 К-ке сәйкес. <b>Қыздыру.</b> Тұрақты көлемде Q_V = ΔU = (3/2)nRΔT, тұрақты қысымда Q_p = (5/2)nRΔT (C_p = C_V + R). 1 моль гелийді 300 → 600 К-ге қыздыру үшін Q_V ≈ 3,74 кДж, Q_p ≈ 6,24 кДж, айырмасы nRΔT ≈ 2,49 кДж – газдың ұлғаю жұмысы. Керісінше, 300 → 150 К-ге салқындатқанда (V = const) ≈ 1,87 кДж жылу алынады. <b>Дыбыс.</b> v_s = √(γ/3)·v_rms; гелий үшін (γ = 5/3) v_s ≈ 0,745·1367 ≈ 1019 м/с, бұл тәжірибедегі мәнмен сәйкес. <b>Қорытынды:</b> классикалық шекте әр ілгерілемелі дәрежеге бір молекулаға ½k_BT (бір мольге ½RT) сәйкес келеді; шарттары k_BT ≫ ΔE және nλ_T³ ≪ 1, қалыпты газдарда ΔE/k_BT ∼ 10⁻⁸, nλ_T³ ∼ 10⁻⁶.</div>
+</section>
+
+<!-- РАХМЕТ -->
+<section class="slide" data-n="18">
+ <svg style="position:absolute;left:34px;top:30px;width:150px;height:125px;opacity:.9" viewBox="0 0 120 100"><use href="#mol"/></svg>
+ <svg style="position:absolute;left:760px;top:20px;width:520px;height:120px;opacity:.55" viewBox="0 0 520 120" fill="none" stroke="#ddd" stroke-width="1.6" stroke-dasharray="6 6" stroke-linecap="round"><path d="M20 90C120 10 260 120 360 50S480 10 505 70"/></svg>
+ <div style="position:absolute;left:120px;top:222px;width:2px;height:190px;background:#e6e6e2;opacity:.85"></div>
+ <div style="position:absolute;left:100px;top:210px;width:700px;height:2px;background:#e6e6e2;opacity:.85"></div>
+ <div style="position:absolute;left:112px;top:204px;width:14px;height:14px;border-radius:50%;background:#e6e6e2"></div>
+ <div class="tf" style="position:absolute;left:150px;top:232px;width:770px">
+  <div style="font-size:64px;line-height:1.15;font-weight:700;color:#f2f2ee">Назарларыңызға</div>
+  <div style="font-size:78px;line-height:1.1;font-weight:700;color:var(--or)">рахмет!</div>
+  <div style="width:130px;height:4px;background:var(--bl);margin:22px 0 18px;border-radius:2px"></div>
+  <div style="font-size:21px;color:#e4e4de;line-height:1.75"><b style="color:#f2f2ee">Кәдірова Аяулым, Тұрсынбай Балнұр, Жуматаев Дархан</b></div>
+ </div>
+ <svg style="position:absolute;left:880px;top:300px;width:340px;height:310px" viewBox="0 0 250 230"><use href="#rack"/>
+  <g fill="none" stroke="#fff" stroke-width="1.5"><circle cx="64" cy="128" r="3"><animate attributeName="cy" values="128;86" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="68" cy="128" opacity="0" r="2.2"><animate attributeName="cy" values="128;86" dur="2.2s" begin="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.2s" begin="1.1s" repeatCount="indefinite"/></circle><circle cx="104" cy="128" r="3"><animate attributeName="cy" values="128;68" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="108" cy="128" opacity="0" r="2.2"><animate attributeName="cy" values="128;68" dur="2.6s" begin="1.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/></circle></g></svg>
+ <svg style="position:absolute;left:1070px;top:520px;width:150px;height:125px;opacity:.7" viewBox="0 0 120 100"><use href="#mol"/></svg>
+ <div style="position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--or)"></div>
+ <div class="note"><b>Қорытынды сөз.</b> Назарларыңызға рахмет! Сұрақтарыңыз болса, қуана жауап береміз. Негізгі ой: әр ілгерілемелі еркіндік дәрежесіне ½k_BT энергия келеді, тек k_BT ≫ ΔE және nλ³ ≪ 1 болғанда.</div>
+</section>
+
+</div></div>
+
+<aside id="notes"></aside>
+<div id="ctrl">
+ <button id="bPrev" title="Алдыңғы (←)">←</button>
+ <span id="cnt">1 / 13</span>
+ <button id="bNext" title="Келесі (→ / Space)">→</button>
+ <button id="bNotes" title="Ескертпе (N)">Ескертпе</button>
+ <button id="bFs" title="Толық экран (F)">⛶</button>
+</div>
+
+<script>
+(function(){
+const kB=1.380649e-23;
+/* ---------- helpers ---------- */
+const NS='http://www.w3.org/2000/svg';
+const FR=(a,b)=>'<span class="fr"><span>'+a+'</span><span>'+b+'</span></span>';
+const F=(n,d)=>n.toFixed(d).replace('.',',');
+function mk(w,h,body){body=body.replace(/_([A-Za-zА-Яа-яӘәҒғҚқҢңӨөҰұҮүІіҺһ]+)/g,'<tspan font-size="75%" dy="4">$1</tspan><tspan dy="-4">\u200b</tspan>');return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" xmlns="'+NS+'">'+body+'</svg>'}
+
+/* ---------- timeline (slide 3) ---------- */
+const TL=[['1900','Планк','E = hν'],['1905','Эйнштейн','фотоэффект, фотондар'],['1913','Бор','электрон тек белгілі деңгейлерде'],['1924','де Бройль','λ = '+FR('h','p')],['1925–26','Гейзенберг, Шредингер','кванттық механика']];
+document.getElementById('tl').innerHTML=TL.map((t,i)=>'<div style="width:19%;text-align:center"><div style="width:26px;height:26px;margin:30px auto 10px;border-radius:50%;border:3px solid '+(i%2?'#4ea9d3':'#f2a71b')+';background:#1b1b1b"></div><div class="tag '+(i%2?'bl':'or')+'">'+t[0]+'</div><div class="ttl" style="font-size:17px;margin-top:10px">'+t[1]+'</div><div class="txt dim" style="font-size:15px;margin-top:3px;line-height:1.3">'+t[2]+'</div></div>').join('');
+
+
+/* ---------- helpers ---------- */
+const fmt=F;
+const $=id=>document.getElementById(id);
+const SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+function sci(x,d){if(x===0)return '0';let e=Math.floor(Math.log10(Math.abs(x))),m=x/Math.pow(10,e);if(+m.toFixed(d)>=10){m/=10;e++}return fmt(m,d)+'·10'+String(e).split('').map(c=>SUP[c]).join('')}
+const hP=6.62607015e-34,NAv=6.02214076e23,Rg=8.314,EV=1.602177e-19,mHe=6.65e-27,mAr=39.948*1.66054e-27;
+function slider(id,fn){const el=$(id);const f=()=>fn(+el.value);el.addEventListener('input',f);el.addEventListener('change',()=>el.blur());f();return el}
+function axes(W,H,L,Rr,T,B){return '<path d="M'+L+' '+(H-B)+'H'+(W-Rr)+'M'+L+' '+(H-B)+'V'+T+'" stroke="#e8e8e2" stroke-width="2" fill="none"/>'}
+
+/* ---------- tasks (slide 7) ---------- */
+(function(){const t=['Еркіндік дәрежесі және квадраттық энергия ұғымдарын анықтау','Энергияның тең бөліну теоремасын тұжырымдап, қорытылуын көрсету','Ілгерілемелі, айналмалы және тербелмелі қозғалыстарға келетін энергияны салыстыру','Теореманың қолданылу шарттары мен кванттық шектеулерін талдау'];
+ $('tasks').innerHTML=t.map((x,i)=>'<div style="display:flex;gap:14px;align-items:center;margin:11px 0"><div class="ring" style="width:46px;height:46px;font-size:19px;border-width:3px;box-shadow:none">'+(i+1)+'</div><div class="txt" style="font-size:17px">'+x+'</div></div>').join('')})();
+
+/* ---------- slide 3: black body, slider T ---------- */
+(function(){
+ const W=360,H=172,L=34,Rr=8,T=8,B=26,lmin=0.1,lmax=3,C2=14388;
+ const xs=l=>L+(l-lmin)/(lmax-lmin)*(W-L-Rr),ys=v=>H-B-v*(H-T-B);
+ const pl=(l,t)=>Math.pow(l,-5)/(Math.exp(C2/(l*t))-1),rj=(l,t)=>Math.pow(l,-4)*t/C2;
+ let pk=0;for(let l=0.1;l<3;l+=0.005)pk=Math.max(pk,pl(l,6000));const sc=0.9/pk;
+ let g='<rect x="'+xs(0.1)+'" y="'+T+'" width="'+(xs(0.4)-xs(0.1))+'" height="'+(H-T-B)+'" fill="#4ea9d3" opacity=".15"/><g class="ax">'+axes(W,H,L,Rr,T,B);
+ [0.5,1,1.5,2,2.5,3].forEach(l=>{g+='<text x="'+xs(l)+'" y="'+(H-B+15)+'" text-anchor="middle" style="font-size:11px">'+fmt(l,1)+'</text>'});
+ g+='<text x="'+(W-Rr)+'" y="'+(H-B-6)+'" text-anchor="end" style="font-size:11px">λ, мкм</text><text x="'+(L+4)+'" y="'+(T+10)+'" style="font-size:11px">энергия</text><text x="'+(xs(0.1)+3)+'" y="'+(H-B-5)+'" fill="#5ab6e0" style="font-size:11px">УК</text></g>';
+ g+='<path id="bbRJ" fill="none" stroke="#e8e8e2" stroke-width="2.2" stroke-dasharray="6 5"/><path id="bbPL" fill="none" stroke="#f2a71b" stroke-width="3"/>';
+ g+='<text x="'+xs(0.95)+'" y="'+(T+14)+'" fill="#e8e8e2" style="font-size:12px;font-weight:700">классика: →∞</text><text id="bbLb" x="'+xs(1.5)+'" y="'+(ys(0.45))+'" fill="#f2a71b" style="font-size:12px;font-weight:700">Планк</text>';
+ $('ch-bb').innerHTML=mk(W,H,g);
+ slider('sT0',t=>{$('vT0').textContent=t+' К';let d='',r='',go=false;
+  for(let l=0.1;l<=3.0001;l+=0.01){d+=(l<0.11?'M':'L')+xs(l).toFixed(1)+' '+ys(Math.min(1.05,pl(l,t)*sc)).toFixed(1);const v=rj(l,t)*sc;if(v<=1.0){r+=(go?'L':'M')+xs(l).toFixed(1)+' '+ys(v).toFixed(1);go=true}}
+  $('bbPL').setAttribute('d',d);$('bbRJ').setAttribute('d',r)});
+})();
+
+/* ---------- slide 5: velocity vector ---------- */
+(function(){
+ const O=[140,250];
+ function draw(a,b,c){
+  const ex=[190*a,0],ey=[0,-150*b],ez=[-70*c,60*c];
+  const P=(x,y,z)=>[O[0]+(x?ex[0]:0)+(y?ey[0]:0)+(z?ez[0]:0),O[1]+(x?ex[1]:0)+(y?ey[1]:0)+(z?ez[1]:0)];
+  const A=P(0,0,0),Bx=P(1,0,0),By=P(0,1,0),Bz=P(0,0,1),Bxy=P(1,1,0),Bxz=P(1,0,1),Byz=P(0,1,1),Pp=P(1,1,1);
+  const q=p=>p[0].toFixed(1)+' '+p[1].toFixed(1);
+  let g='<g fill="none" stroke="#8f8f8c" stroke-width="1.6" stroke-dasharray="6 5"><path d="M'+q(Bx)+'L'+q(Bxy)+'M'+q(Bx)+'L'+q(Bxz)+'M'+q(By)+'L'+q(Bxy)+'M'+q(By)+'L'+q(Byz)+'M'+q(Bz)+'L'+q(Bxz)+'M'+q(Bz)+'L'+q(Byz)+'M'+q(Bxy)+'L'+q(Pp)+'M'+q(Bxz)+'L'+q(Pp)+'M'+q(Byz)+'L'+q(Pp)+'"/></g>';
+  g+='<g stroke="#e8e8e2" stroke-width="1.8" fill="none"><path d="M140 250H395" marker-end="url(#arW)"/><path d="M140 250V50" marker-end="url(#arW)"/><path d="M140 250L40 335" marker-end="url(#arW)"/></g>';
+  g+='<path d="M'+q(A)+'L'+q(Bx)+'" stroke="#4ea9d3" stroke-width="3.6" fill="none" marker-end="url(#arB)"/><path d="M'+q(A)+'L'+q(By)+'" stroke="#e8e8e2" stroke-width="3.6" fill="none" marker-end="url(#arW)"/><path d="M'+q(A)+'L'+q(Bz)+'" stroke="#a9a9a4" stroke-width="3.6" fill="none" marker-end="url(#arG)"/><path d="M'+q(A)+'L'+q(Pp)+'" stroke="#f2a71b" stroke-width="4.8" fill="none" marker-end="url(#arO)"/>';
+  g+='<g font-size="21" font-style="italic" font-family="Cambria Math,Times New Roman,serif"><text x="400" y="256" fill="#e8e8e2">x</text><text x="148" y="46" fill="#e8e8e2">y</text><text x="26" y="342" fill="#e8e8e2">z</text>'
+   +'<text x="'+((A[0]+Bx[0])/2-6)+'" y="'+(A[1]+24)+'" fill="#4ea9d3">v<tspan font-size="14" dy="5">x</tspan></text>'
+   +'<text x="'+(A[0]-30)+'" y="'+((A[1]+By[1])/2)+'" fill="#e8e8e2">v<tspan font-size="14" dy="5">y</tspan></text>'
+   +'<text x="'+(Bz[0]-4)+'" y="'+(Bz[1]+26)+'" fill="#c9c9c3">v<tspan font-size="14" dy="5">z</tspan></text>'
+   +'<text x="'+(Pp[0]+10)+'" y="'+(Pp[1]-8)+'" fill="#f2a71b" font-size="25">v</text></g>';
+  $('ch-vec').innerHTML='<svg viewBox="0 20 430 330" width="100%">'+g+'</svg>';
+  const s2=[a*a,b*b,c*c],t=s2[0]+s2[1]+s2[2],cols=['#4ea9d3','#e8e8e2','#a9a9a4'],nm=[FR('mv<sub>x</sub>²',2),FR('mv<sub>y</sub>²',2),FR('mv<sub>z</sub>²',2)];
+  $('vbars').innerHTML=s2.map((v,i)=>'<div style="display:flex;align-items:center;gap:10px;margin:5px 0"><span class="txt" style="width:92px;font-size:18px;font-style:italic">'+nm[i]+'</span><div style="flex:1;height:16px;border:1.5px solid rgba(255,255,255,.5);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+(v/t*100).toFixed(1)+'%;background:'+cols[i]+';transition:width .15s"></div></div><b style="width:48px;text-align:right;font-size:15px">'+Math.round(v/t*100)+' %</b></div>').join('')}
+ const S=()=>draw(+$('sVx').value,+$('sVy').value,+$('sVz').value);
+ ['sVx','sVy','sVz'].forEach(id=>{const e=$(id);e.addEventListener('input',S);e.addEventListener('change',()=>e.blur())});S();
+})();
+
+/* ---------- slide 8: U = N f/2 kT ---------- */
+(function(){
+ const fd=$('fdots');for(let i=0;i<8;i++){const d=document.createElement('div');d.style.cssText='width:26px;height:26px;border:2px solid #f2a71b;border-radius:5px;transition:background .2s';fd.appendChild(d)}
+ let f=3,T=300;
+ function up(){[].forEach.call(fd.children,(d,i)=>{d.style.background=i<f?'#f2a71b':'transparent'});
+  $('vF').textContent=f;$('vT8').textContent=T+' К';
+  $('rd8').innerHTML='1 молекула: ⟨<i>E</i>⟩ = '+fmt(f/2,1)+'·<i>k</i><sub>B</sub><i>T</i> ≈ <b class="or-t">'+sci(f/2*kB*T,2)+' Дж</b><br>1 моль: <i>U</i> = '+fmt(f/2,1)+'·<i>RT</i> ≈ <b class="or-t">'+fmt(f/2*Rg*T/1000,2)+' кДж</b>'}
+ slider('sF',v=>{f=v;up()});slider('sT8',v=>{T=v;up()});
+})();
+
+/* ---------- slide 9: Maxwell (Ar) + particles ---------- */
+(function(){
+ const W=640,H=330,L=62,Rr=16,T=12,B=48,m=mAr,xmax=2500,ymax=4.4;
+ const xs=v=>L+v/xmax*(W-L-Rr),ys=f=>H-B-f/ymax*(H-T-B);
+ const fv=(v,t)=>4*Math.PI*Math.pow(m/(2*Math.PI*kB*t),1.5)*v*v*Math.exp(-m*v*v/(2*kB*t))*1000;
+ let g='<g class="ax">';
+ for(let v=0;v<=2500;v+=500)g+='<path d="M'+xs(v)+' '+T+'V'+(H-B)+'" stroke="#fff" stroke-opacity=".12"/><text x="'+xs(v)+'" y="'+(H-B+19)+'" text-anchor="middle">'+v+'</text>';
+ for(let y=0;y<=4;y++)g+='<path d="M'+L+' '+ys(y)+'H'+(W-Rr)+'" stroke="#fff" stroke-opacity=".12"/><text x="'+(L-8)+'" y="'+(ys(y)+5)+'" text-anchor="end">'+y+'</text>';
+ g+=axes(W,H,L,Rr,T,B)+'<text x="'+((L+W-Rr)/2)+'" y="'+(H-10)+'" text-anchor="middle">Жылдамдық v, м/с</text><text transform="translate(16 '+((H-B+T)/2)+') rotate(-90)" text-anchor="middle">f(v), 10⁻³ с/м</text></g>';
+ const cfg=[[100,'#4ea9d3','2,1'],[300,'#f2a71b','6,2'],[900,'#9a9a98','18,6']];
+ cfg.forEach(c=>{let d='';for(let v=0;v<=2500;v+=10)d+=(v?'L':'M')+xs(v).toFixed(1)+' '+ys(fv(v,c[0])).toFixed(1);g+='<path d="'+d+'" fill="none" stroke="'+c[1]+'" stroke-width="2" opacity=".85"/>'});
+ cfg.forEach((c,i)=>{const y=24+i*21;g+='<path d="M'+(W-290)+' '+y+'h22" stroke="'+c[1]+'" stroke-width="3"/><text x="'+(W-260)+'" y="'+(y+5)+'" fill="#e8e8e2" style="font-size:13px">T = '+c[0]+' К, ⟨K⟩ = '+c[2]+'·10⁻²¹ Дж</text>'});
+ g+='<path id="mxA" fill="rgba(242,242,238,.14)" stroke="none"/><path id="mxL" fill="none" stroke="#f2f2ee" stroke-width="3.8" stroke-linejoin="round"/><path id="mxV" stroke="#f2f2ee" stroke-width="1.6" stroke-dasharray="4 4"/>';
+ $('ch-max').innerHTML=mk(W,H,g);
+ let Tc=300;
+ function up(t){Tc=t;$('vT1').textContent=t+' К';let d='';for(let v=0;v<=2500;v+=10)d+=(v?'L':'M')+xs(v).toFixed(1)+' '+ys(fv(v,t)).toFixed(1);
+  $('mxL').setAttribute('d',d);$('mxA').setAttribute('d',d+'L'+xs(2500)+' '+ys(0)+'L'+xs(0)+' '+ys(0)+'Z');
+  const vp=Math.sqrt(2*kB*t/m);$('mxV').setAttribute('d','M'+xs(vp)+' '+ys(0)+'V'+ys(fv(vp,t)));
+  $('rd1').innerHTML='⟨<i>K</i>⟩ = '+FR(3,2)+'<i>kT</i> ≈ <b class="or-t">'+sci(1.5*kB*t,2)+' Дж</b> ≈ '+fmt(1.5*kB*t/EV,3)+' эВ · <i>v</i><sub>ең ықт.</sub> ≈ '+Math.round(vp)+' м/с'}
+ const sl=slider('sT1',up);
+ let pl=null;$('bPlay1').onclick=function(){if(pl){clearInterval(pl);pl=null;this.textContent='▶'}else{this.textContent='⏸';let dir=1;pl=setInterval(()=>{let v=+sl.value+dir*8;if(v>=1200){v=1200;dir=-1}if(v<=100){v=100;dir=1}sl.value=v;up(v)},40)}};
+ // particles
+ const cv=$('cv1'),ctx=cv.getContext('2d'),P=[];for(let i=0;i<34;i++){const a=Math.random()*6.283;P.push({x:Math.random()*cv.width,y:Math.random()*cv.height,a:a,k:0.55+Math.random()*0.9})}
+ window.__anim=window.__anim||[];
+ window.__anim.push(function(){if(!cv.closest('.slide').classList.contains('active'))return;ctx.clearRect(0,0,cv.width,cv.height);const sp=Math.sqrt(Tc/300)*1.7;
+  ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=2;ctx.strokeRect(1,1,cv.width-2,cv.height-2);
+  P.forEach(p=>{const vx=Math.cos(p.a)*sp*p.k,vy=Math.sin(p.a)*sp*p.k;p.x+=vx;p.y+=vy;if(p.x<5||p.x>cv.width-5){p.a=Math.PI-p.a;p.x=Math.max(5,Math.min(cv.width-5,p.x))}if(p.y<5||p.y>cv.height-5){p.a=-p.a;p.y=Math.max(5,Math.min(cv.height-5,p.y))}
+   const f=Math.min(1,sp*p.k/3);ctx.fillStyle=f>0.6?'#f2a71b':'#4ea9d3';ctx.beginPath();ctx.arc(p.x,p.y,4,0,6.283);ctx.fill()})});
+})();
+
+/* ---------- slide 10: potential well ---------- */
+(function(){
+ const W=520,H=250,L=24,Rr=14,T=12,B=30,X0=-3,X1=3,Y1=4;
+ const xs=x=>L+(x-X0)/(X1-X0)*(W-L-Rr),ys=e=>H-B-e/Y1*(H-T-B);
+ let g='<g class="ax">'+axes(W,H,L,Rr,T,B)+'<text x="'+(W-Rr)+'" y="'+(H-8)+'" text-anchor="end">x</text><text x="'+(L+6)+'" y="'+(T+12)+'">энергия</text></g>';
+ g+='<path id="wG" fill="rgba(78,169,211,.32)" stroke="#4ea9d3" stroke-width="2"/><path id="wP" fill="none" stroke="#f2f2ee" stroke-width="3.2"/><path id="wH" stroke="#f2a71b" stroke-width="2.2" stroke-dasharray="7 5"/><path id="wX" stroke="#f2a71b" stroke-width="2" /><g id="wT" fill="#f2a71b" style="font-size:14px;font-weight:700"><text text-anchor="middle" y="-4">1</text><path d="M-6 0H6" stroke="#f2a71b" stroke-width="1.6"/><text text-anchor="middle" y="13">2</text><text x="12" y="5">k<tspan font-size="11" dy="3">B</tspan><tspan dy="-3">T</tspan></text></g><text id="wR" fill="#e8e8e2" text-anchor="middle" style="font-size:13px"></text>';
+ $('ch-well').innerHTML=mk(W,H,g);
+ let a=1.5,kt=1.5;
+ function up(){$('vA').textContent=fmt(a,1);$('vKT').textContent=fmt(kt,1);
+  let d='',xm=Math.sqrt(Y1/a);for(let x=-xm;x<=xm+1e-6;x+=0.02)d+=(d?'L':'M')+xs(x).toFixed(1)+' '+ys(a*x*x).toFixed(1);$('wP').setAttribute('d',d);
+  let q='M'+xs(X0)+' '+ys(0);for(let x=X0;x<=X1+1e-6;x+=0.05)q+='L'+xs(x).toFixed(1)+' '+ys(1.7*Math.exp(-a*x*x/kt)).toFixed(1);q+='L'+xs(X1)+' '+ys(0)+'Z';$('wG').setAttribute('d',q);
+  $('wH').setAttribute('d','M'+xs(X0)+' '+ys(kt/2)+'H'+xs(X1));
+  const xr=Math.sqrt(kt/(2*a));$('wX').setAttribute('d','M'+xs(-xr)+' '+ys(0)+'V'+ys(kt/2)+'M'+xs(xr)+' '+ys(0)+'V'+ys(kt/2));
+  $('wT').setAttribute('transform','translate('+(xs(X0)+16)+' '+(ys(kt/2)-18)+')');
+  const rr=$('wR');rr.setAttribute('x',xs(0));rr.setAttribute('y',ys(0)+22);rr.textContent='±√⟨x²⟩ = ±'+fmt(xr,2);
+  $('rdw').innerHTML='⟨<i>x</i>²⟩ = '+FR('<i>k</i><sub>B</sub><i>T</i>','2<i>α</i>')+' = <b>'+fmt(kt/(2*a),2)+'</b> &nbsp;|&nbsp; <i>α</i>⟨<i>x</i>²⟩ = <b class="or-t">'+fmt(a*(kt/(2*a)),2)+'</b> = '+FR(1,2)+'<i>k</i><sub>B</sub><i>T</i>'}
+ slider('sA',v=>{a=v;up()});slider('sKT',v=>{kt=v;up()});
+})();
+
+/* ---------- slide 11: motion types ---------- */
+(function(){
+ const M=[['He, Ne, Ar',0,false],['N₂, O₂, H₂',1,true],['H₂O, CH₄',1.5,true]];let sel=1;const cb=$('cVib');
+ $('mbtn').innerHTML=M.map((m,i)=>'<button class="mb" data-i="'+i+'">'+m[0]+'</button>').join('');
+ $('bars').innerHTML='<div style="display:flex;height:48px;border:2px solid rgba(255,255,255,.7);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.25)"><div id="sg0" style="background:#4ea9d3"></div><div id="sg1" style="background:#f2a71b"></div><div id="sg2" style="background:#f2f2ee"></div></div><div class="txt" style="font-size:14px;margin-top:8px;display:flex;gap:16px;flex-wrap:wrap"><span><span style="color:#4ea9d3">■</span> ілгерілемелі</span><span><span style="color:#f2a71b">■</span> айналмалы</span><span><span style="color:#f2f2ee">■</span> тербелмелі</span></div>';
+ function up(){[].forEach.call($('mbtn').children,(b,i)=>b.classList.toggle('on',i===sel));
+  const m=M[sel];cb.disabled=!m[2];if(!m[2])cb.checked=false;
+  const v=cb.checked?1:0,t=1.5,r=m[1],tot=t+r+v,sc=100/4;
+  $('sg0').style.width=t*sc+'%';$('sg1').style.width=r*sc+'%';$('sg2').style.width=v*sc+'%';
+  const n=Math.round(tot*2);$('uTot').innerHTML='<i>u</i> = '+(n%2===0?(n/2):FR(n,2))+' <i>k</i><sub>B</sub><i>T</i>'+'<div class="txt dim" style="font-size:14px;margin-top:2px">'+fmt(t,1)+' + '+fmt(r,1)+' + '+fmt(v,1)+' ( <i>k</i><sub>B</sub><i>T</i> бірлігінде )</div>'}
+ $('mbtn').addEventListener('click',e=>{const b=e.target.closest('button');if(b){sel=+b.dataset.i;up()}});cb.addEventListener('change',()=>{up();cb.blur()});up();
+})();
+
+/* ---------- slide 13: He problem, T2 slider ---------- */
+slider('sT13',t2=>{$('vT13').textContent=t2+' К';const U2=1.5*Rg*t2,U1=1.5*Rg*300;
+ $('tU2').textContent='≈ '+fmt(U2/1000,2)+' кДж';$('tdU').textContent='≈ '+fmt((U2-U1)/1000,2)+' кДж';
+ $('tE2').innerHTML='⟨<i>E</i>⟩₂ ≈ '+sci(1.5*kB*t2,2)+' Дж';$('tRat').innerHTML=FR('T₂','T₁')+' = '+fmt(t2/300,2)+' → '+FR('U₂','U₁')+' = '+fmt(U2/U1,2)});
+
+/* ---------- slide 14: <E>(T) + marker ---------- */
+(function(){
+ const W=600,H=400,L=62,Rr=66,T=18,B=54,xmax=900,ymax=20;
+ const xs=t=>L+t/xmax*(W-L-Rr),ys=e=>H-B-e/ymax*(H-T-B);
+ let g='<g class="ax">';
+ for(let t=0;t<=900;t+=150)g+='<path d="M'+xs(t)+' '+T+'V'+(H-B)+'" stroke="#fff" stroke-opacity=".12"/><text x="'+xs(t)+'" y="'+(H-B+20)+'" text-anchor="middle">'+t+'</text>';
+ for(let y=0;y<=20;y+=4)g+='<path d="M'+L+' '+ys(y)+'H'+(W-Rr)+'" stroke="#fff" stroke-opacity=".12"/><text x="'+(L-8)+'" y="'+(ys(y)+5)+'" text-anchor="end">'+y+'</text>';
+ for(let e=0;e<=0.12001;e+=0.02)g+='<text x="'+(W-Rr+8)+'" y="'+(ys(e*EV/1e-21)+5)+'" fill="#f2a71b">'+fmt(e,2)+'</text>';
+ g+=axes(W,H,L,Rr,T,B)+'<path d="M'+(W-Rr)+' '+(H-B)+'V'+T+'" stroke="#e8e8e2" stroke-width="2"/><text x="'+((L+W-Rr)/2)+'" y="'+(H-12)+'" text-anchor="middle">T, К</text><text transform="translate(16 '+((H-B+T)/2)+') rotate(-90)" text-anchor="middle">⟨E⟩, 10⁻²¹ Дж</text><text transform="translate('+(W-12)+' '+((H-B+T)/2)+') rotate(90)" text-anchor="middle" fill="#f2a71b">⟨E⟩, эВ</text></g>';
+ g+='<path d="M'+xs(0)+' '+ys(0)+'L'+xs(900)+' '+ys(1.5*kB*900*1e21)+'" stroke="#4ea9d3" stroke-width="3.4" fill="none"/>';
+ [[300,'6,21·10⁻²¹ Дж'],[600,'12,43·10⁻²¹ Дж']].forEach(p=>{const e=1.5*kB*p[0]*1e21;g+='<path d="M'+xs(p[0])+' '+ys(0)+'V'+ys(e)+'" stroke="#f2a71b" stroke-dasharray="6 5" stroke-width="1.6" opacity=".6"/><circle cx="'+xs(p[0])+'" cy="'+ys(e)+'" r="6" fill="#f2a71b" opacity=".7"/><text x="'+(xs(p[0])+10)+'" y="'+(ys(e)+26)+'" fill="#f2a71b" style="font-size:13px;font-weight:700">'+p[1]+'</text>'});
+ g+='<text x="'+xs(60)+'" y="'+ys(17.5)+'" fill="#e8e8e2" style="font-size:15px;font-weight:700">⟨E⟩ = 1,5·k_B·T: түзу сызық</text><text x="'+xs(60)+'" y="'+ys(16.2)+'" fill="#a9a9a4" style="font-size:13.5px">T екі есе → ⟨E⟩ екі есе (300 → 600 К)</text>';
+ g+='<path id="lnV" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 4"/><circle id="lnM" r="9" fill="rgba(255,255,255,.15)" stroke="#fff" stroke-width="3"/>';
+ $('ch-lin').innerHTML=mk(W,H,g);
+ slider('sT14',t=>{$('vT14').textContent=t+' К';const e=1.5*kB*t*1e21;$('lnM').setAttribute('cx',xs(t));$('lnM').setAttribute('cy',ys(e));$('lnV').setAttribute('d','M'+xs(t)+' '+ys(0)+'V'+ys(e));
+  $('rd14').innerHTML='⟨<i>E</i>⟩ = <b class="or-t">'+sci(1.5*kB*t,2)+' Дж</b> = '+fmt(1.5*kB*t/EV,3)+' эВ<br><i>v</i><sub>rms</sub>: He ≈ <b>'+Math.round(Math.sqrt(3*kB*t/mHe))+'</b> м/с, N₂ ≈ <b>'+Math.round(Math.sqrt(3*Rg*t/0.028))+'</b> м/с'});
+})();
+
+/* ---------- slide 15: quantum conditions calculator ---------- */
+(function(){
+ let L=0.01,T=300;
+ function up(){const m=mHe,e1=hP*hP/(8*m*L*L),dE=2*Math.sqrt(e1*kB*T),r1=dE/(kB*T),n=101325/(kB*T),lam=hP/Math.sqrt(2*Math.PI*m*kB*T),r2=n*lam*lam*lam;
+  const ok=x=>x<0.01;const st=x=>ok(x)?'<span class="bl-t">✓ классикалық</span>':'<span class="or-t">✗ кванттық</span>';
+  const Ls=L>=0.01?fmt(L*100,L>=0.1?0:1)+' см':L>=0.001?fmt(L*1000,1)+' мм':fmt(L*1e6,L>=1e-4?0:1)+' мкм';
+  $('vL').textContent=Ls;$('vT15').textContent=T+' К';
+  $('rd15').innerHTML='<div class="txt" style="font-size:17px;line-height:1.55"><i>k</i><sub>B</sub><i>T</i> ≫ Δ<i>E</i>: '+FR('Δ<i>E</i>','<i>k</i><sub>B</sub><i>T</i>')+' ≈ <b>'+sci(r1,0)+'</b> &nbsp;'+st(r1)+'<br><i>nλ<sub>T</sub></i>³ ≪ 1: <i>nλ<sub>T</sub></i>³ ≈ <b>'+sci(r2,1)+'</b> &nbsp;'+st(r2)+'</div>'}
+ slider('sL',v=>{L=Math.pow(10,-6+v/100);up()});slider('sT15',v=>{T=v;up()});
+})();
+
+/* ---------- slide 16: Cv/R of H2 + marker ---------- */
+(function(){
+ const W=700,H=400,L=80,Rr=20,T=18,B=58,tmin=10,tmax=10000,ymin=1.0,ymax=4.0;
+ const xs=t=>L+(Math.log10(t)-Math.log10(tmin))/(Math.log10(tmax)-Math.log10(tmin))*(W-L-Rr),ys=c=>H-B-(c-ymin)/(ymax-ymin)*(H-T-B);
+ function rot(t){const th=85;let Z=0,E1=0,E2=0;for(let J=0;J<80;J++){const e=J*(J+1)*th/t,w=(2*J+1)*Math.exp(-e);Z+=w;E1+=w*e;E2+=w*e*e}return E2/Z-Math.pow(E1/Z,2)}
+ function vib(t){const x=6200/t,ex=Math.exp(x);return x*x*ex/Math.pow(ex-1,2)}
+ let g='<g class="ax">';
+ [10,100,1000,10000].forEach(t=>{g+='<path d="M'+xs(t)+' '+T+'V'+(H-B)+'" stroke="#fff" stroke-opacity=".12"/><text x="'+xs(t)+'" y="'+(H-B+20)+'" text-anchor="middle">'+t+'</text>'});
+ [1.5,2.5,3.5].forEach(c=>{g+='<path d="M'+L+' '+ys(c)+'H'+(W-Rr)+'" stroke="#fff" stroke-opacity=".38" stroke-dasharray="7 6"/><text x="'+(L-8)+'" y="'+(ys(c)+5)+'" text-anchor="end">'+fmt(c,1)+'</text>'});
+ g+=axes(W,H,L,Rr,T,B)+'<text x="'+((L+W-Rr)/2)+'" y="'+(H-12)+'" text-anchor="middle">T, К (логарифмдік шкала)</text><g transform="translate(20 '+((H-B+T)/2)+') rotate(-90)"><text text-anchor="middle" y="-5">C_V</text><path d="M-14 0H14" stroke="#d8d8d2" stroke-width="1.4"/><text text-anchor="middle" y="15">R</text></g></g>';
+ let d='';for(let i=0;i<=240;i++){const t=tmin*Math.pow(tmax/tmin,i/240);d+=(i?'L':'M')+xs(t).toFixed(1)+' '+ys(1.5+rot(t)+vib(t)).toFixed(1)}
+ g+='<path d="'+d+'" fill="none" stroke="#f2a71b" stroke-width="3.6" stroke-linejoin="round"/>';
+ [[85,'θ_айн ≈ 85 К'],[6200,'θ_тер ≈ 6200 К']].forEach(p=>{g+='<path d="M'+xs(p[0])+' '+(H-B)+'v-10" stroke="#e8e8e2" stroke-width="2.4"/><text x="'+xs(p[0])+'" y="'+(H-B-16)+'" text-anchor="'+(p[0]>1000?'end':'start')+'" fill="#e8e8e2" style="font-size:13px">'+p[1]+'</text>'});
+ const lab=(x,y,a,b,t)=>'<g transform="translate('+x+' '+y+')" fill="#e8e8e2" style="font-size:14px"><text text-anchor="middle" x="8" y="-5" style="font-size:12px">'+a+'</text><path d="M0 0H16" stroke="#e8e8e2" stroke-width="1.4"/><text text-anchor="middle" x="8" y="12" style="font-size:12px">'+b+'</text><text x="24" y="4">'+t+'</text></g>';
+ g+=lab(L+10,ys(1.5)-16,3,2,'ілгерілемелі (He, Ar)')+lab(xs(120),ys(2.5)-16,5,2,'+ айналу')+lab(xs(500),ys(3.5)-16,7,2,'+ тербеліс')+'<text x="'+(W-Rr)+'" y="'+(T+10)+'" text-anchor="end" fill="#a9a9a4" style="font-size:12.5px">H₂: қатты ротатор + Эйнштейн тербелісі (есептік модель)</text>';
+ g+='<path id="cvV" stroke="#4ea9d3" stroke-width="1.8" stroke-dasharray="5 5"/><circle id="cvM" r="9" fill="rgba(78,169,211,.35)" stroke="#fff" stroke-width="3"/>';
+ $('ch-cv').innerHTML=mk(W,H,g);
+ slider('sT16',s=>{const t=10*Math.pow(10,3*s/1000),r=rot(t),v=vib(t),c=1.5+r+v;
+  $('vT16').textContent=(t<100?fmt(t,1):Math.round(t))+' К';$('cvM').setAttribute('cx',xs(t));$('cvM').setAttribute('cy',ys(c));$('cvV').setAttribute('d','M'+xs(t)+' '+T+'V'+(H-B));
+  const chip=(txt,o,cl)=>'<span class="tag '+cl+'" style="opacity:'+(0.2+0.8*Math.min(1,o)).toFixed(2)+'">'+txt+'</span>';
+  $('rd16').innerHTML=FR('<i>C<sub>V</sub></i>','<i>R</i>')+' = <b class="or-t">'+fmt(c,2)+'</b> &nbsp;'+chip('ілгерілемелі',1,'')+' '+chip('айналмалы',r,'or')+' '+chip('тербелмелі',v,'bl')});
+ $('sT16').value=492.4;$('sT16').dispatchEvent(new Event('input'));
+})();
+
+/* ---------- animation loop ---------- */
+(function loop(){(window.__anim||[]).forEach(f=>f());requestAnimationFrame(loop)})();
+
+
+/* ---------- deck engine ---------- */
+const slides=[].slice.call(document.querySelectorAll('.slide'));
+const N=slides.length, stage=document.getElementById('stage'), view=document.getElementById('view');
+const notesEl=document.getElementById('notes'), cnt=document.getElementById('cnt'), prog=document.getElementById('prog');
+let cur=0, notesOpen=false;
+function fit(){
+ const ctrlH=48, nH=notesOpen?(window.innerWidth<=700?120:150):0;
+ const aw=window.innerWidth, ah=window.innerHeight-ctrlH-nH;
+ view.style.height=ah+'px';
+ const s=Math.min(aw/1280,ah/720);
+ stage.style.transform='scale('+s+')';
+ stage.style.left=((aw-1280*s)/2)+'px';stage.style.top=((ah-720*s)/2)+'px';
+}
+function notesFmt(t){const F=FR;
+ t=t.replace(/½/g,F(1,2)).replace(/\((\d)\/(\d)\)/g,(m,a,b)=>F(a,b)).replace(/(\d)\/(\d)(?![\d\/])/g,(m,a,b)=>F(a,b))
+  .replace(/(mv[xyz]?²)\/2kT/g,(m,a)=>F(a,'2kT')).replace(/(mv[xyz]?²)\/2/g,(m,a)=>F(a,2)).replace(/ħ\/2/g,F('ħ',2)).replace(/\bh\/p\b/g,F('h','p'))
+  .replace(/hc\/λ/g,F('hc','λ')).replace(/c\/λ/g,F('c','λ')).replace(/ΔE\/k_BT/g,F('ΔE','k_BT')).replace(/(\d)kT\/2/g,(m,a)=>F(a+'kT',2))
+  .replace(/p\/p_үш/g,F('p','p_үш')).replace(/3k_BT\/m/g,F('3k_BT','m')).replace(/3RT\/M/g,F('3RT','M')).replace(/γ\/3/g,F('γ',3))
+  .replace(/d\/dT/g,F('d','dT')).replace(/k_BT\/α/g,F('k_BT','α')).replace(/n²h²\/\(8mL²\)/g,F('n²h²','8mL²')).replace(/πkT\/c/g,F('πkT','c')).replace(/cx²\/kT/g,F('cx²','kT'))
+  .replace(/\(m\/2πkT\)\^\{3\/2\}/g,'('+F('m','2πkT')+')<sup>3/2</sup>').replace(/\^\{1\/2\}/g,'<sup>1/2</sup>').replace(/p\/\(k_BT\)/g,F('p','k_BT'))
+  .replace(/h\/√\(2πmk_BT\)/g,F('h','√(2πmk_BT)')).replace(/ν = c/g,'ν = c')
+  .replace(/_([A-Za-zА-Яа-яα-ωӘәҒғҚқҢңӨөҰұҮүІіҺһ0-9]+)/g,'<sub>$1</sub>');
+ return t}
+function go(i,noHash){
+ i=Math.max(0,Math.min(N-1,i));cur=i;
+ slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+ cnt.textContent=(i+1)+' / '+N;
+ prog.style.width=((i+1)/N*100)+'%';
+ const n=slides[i].querySelector('.note');
+ notesEl.innerHTML=n?notesFmt(n.innerHTML):'';
+ if(!noHash)try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+}
+function setNotes(v){notesOpen=v;notesEl.style.display=v?'block':'none';fit()}
+function fs(){const d=document,e=d.documentElement;if(!d.fullscreenElement&&!d.webkitFullscreenElement){(e.requestFullscreen||e.webkitRequestFullscreen||function(){}).call(e)}else{(d.exitFullscreen||d.webkitExitFullscreen||function(){}).call(d)}}
+document.getElementById('bPrev').onclick=()=>go(cur-1);
+document.getElementById('bNext').onclick=()=>go(cur+1);
+document.getElementById('bNotes').onclick=()=>setNotes(!notesOpen);
+document.getElementById('bFs').onclick=fs;
+document.addEventListener('keydown',e=>{
+ const k=e.key;const tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='BUTTON'&&(k===' '||k==='Enter'))return;
+ if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='ArrowDown'){e.preventDefault();go(cur+1)}
+ else if(k==='ArrowLeft'||k==='PageUp'||k==='ArrowUp'){e.preventDefault();go(cur-1)}
+ else if(k==='Home'){go(0)}else if(k==='End'){go(N-1)}
+ else if(k==='f'||k==='F'){fs()}else if(k==='n'||k==='N'){setNotes(!notesOpen)}
+});
+let sx=null,sy=null;
+view.addEventListener('touchstart',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'){sx=null;return}sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+view.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){go(cur+(dx<0?1:-1))}sx=null},{passive:true});
+window.addEventListener('resize',fit);
+document.addEventListener('fullscreenchange',fit);
+const h=parseInt((location.hash||'').slice(1),10);
+fit();go(isNaN(h)?0:h-1,true);
+})();
+</script>
+</body>
+</html>
